@@ -22,3 +22,10 @@ echo "your_password" > secrets/db_password.txt
 conda activate fastapi_postgres_env
 uvicorn main:app --reload
 ```
+
+# pytest
+
+```bash
+conda activate fastapi_postgres_env
+pytest
+```
