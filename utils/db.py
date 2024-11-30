@@ -6,8 +6,8 @@ from contextlib import contextmanager
 # 資料庫配置
 DB_HOST = "localhost"
 DB_PORT = "5432"
-DB_NAME = "iclinic"
-DB_USER = "postgres"
+DB_NAME = "db_project"
+DB_USER = "user"
 
 # 讀取密碼
 PASSWORD_FILE = "secrets/db_password.txt"
