@@ -27,5 +27,6 @@ uvicorn main:app --reload
 
 ```bash
 conda activate fastapi_postgres_env
+set PYTHONPATH="your_root_repo_path"
 pytest
 ```
