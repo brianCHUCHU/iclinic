@@ -4,7 +4,7 @@ from .base import Base
 
 class Membership(Base):
     __tablename__ = "membership"
-    pid = Column(String(10), ForeignKey("patient.pid"), primary_key=True)
+    pid = Column(String(10), ForeignKey("patient.pid", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
     acctname = Column(String(20), unique=True, nullable=False)
     acctpw = Column(String(30), nullable=False)
     email = Column(String(30), unique=True, nullable=False)

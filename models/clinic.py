@@ -18,4 +18,4 @@ class Clinic(Base):
     address = Column(String(100), nullable=False)  # Clinic Address (excluding city and district)
 
     # Relationships
-    rooms = relationship("Room", back_populates="clinic", cascade="all, delete")
+    rooms = relationship("Room", back_populates="clinic", cascade="all, delete, save-update")
