@@ -49,6 +49,15 @@ def update_clinic(db: Session, cid: str, clinic_update: ClinicUpdate):
     db.refresh(clinic)
     return clinic
 
+# 刪除診所
+def delete_clinic(db: Session, cid: str):
+    clinic = get_clinic_by_id(db, cid)
+    if not clinic:
+        return None
+    db.delete(clinic)
+    db.commit()
+    return clinic
+
 # 查詢所有診所 (支援條件篩選)
 def get_all_clinics(db: Session, city: str = None, district: str = None):
     query = db.query(Clinic)
