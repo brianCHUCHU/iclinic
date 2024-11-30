@@ -5,6 +5,7 @@ from routes.clinic_routes import clinic_router
 from routes.division_routes import division_router 
 from routes.room_routes import room_router
 from routes.doctor_routes import doctor_router
+from routes.patient_routes import patient_router
 from contextlib import asynccontextmanager
 
 app = FastAPI()
@@ -28,4 +29,5 @@ def read_root():
 app.include_router(clinic_router)
 app.include_router(room_router)
 app.include_router(doctor_router)
+app.include_router(patient_router)
 app.include_router(division_router)

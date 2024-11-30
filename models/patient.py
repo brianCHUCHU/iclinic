@@ -11,6 +11,6 @@ class Patient(Base):
     status = Column(String(1), nullable=False)
 
     # 關聯 Membership
-    membership = relationship("Membership", back_populates="patient", uselist=False)
+    # membership = relationship("Membership", back_populates="patient", uselist=False)
 
 
