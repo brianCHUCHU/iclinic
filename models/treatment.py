@@ -12,8 +12,8 @@ class Treatment(Base):
     cid = Column(String(10), ForeignKey("clinic.cid", ondelete="CASCADE", onupdate="CASCADE"), nullable=False)  # Clinic ID
     tname = Column(String(20), nullable=False)  # Treatment Name
 
-    # Relationships (if necessary)
-    # Example:
-    doctor = relationship("Doctor", back_populates="treatments")
-    division = relationship("Division", back_populates="treatments")
-    clinic = relationship("Clinic", back_populates="treatments")
+    # # Relationships (if necessary)
+    # # Example:
+    # doctor = relationship("Doctor", back_populates="treatments")
+    # division = relationship("Division", back_populates="treatments")
+    # clinic = relationship("Clinic", back_populates="treatments")
