@@ -8,3 +8,7 @@ class Doctor(Base):
     # Columns
     docid = Column(String(10), primary_key=True)  # Doctor ID
     docname = Column(String(20), nullable=False)  # Doctor Name
+'''
+    #Relationship
+    hires = relationship("Hires", back_populates="doctor")
+'''
