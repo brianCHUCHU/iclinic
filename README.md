@@ -10,10 +10,15 @@ pip install -r requirements.txt
 
 # Database
 
-Add `secrets/db_password.txt` file with the password of the database.
+Add `secrets/.env` file with the correct environment variables.
 
-```bash
-echo "your_password" > secrets/db_password.txt
+Example:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=iclinic
+DB_USER=postgres
+DB_PASSWORD="your_password"
 ```
 
 # Run the FastAPI server

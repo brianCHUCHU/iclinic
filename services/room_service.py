@@ -3,6 +3,7 @@ from models.room import Room
 from schemas.room import RoomCreate ,RoomUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext
+from sqlalchemy.orm.exc import NoResultFound
 
 def create_room(db: Session, room_data: RoomCreate):
     existing_room = db.query(Room).filter_by(rid=room_data.rid, cid=room_data.cid).first()

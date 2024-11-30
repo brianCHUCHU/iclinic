@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 # 新增病患
 def create_patient(db: Session, patient_data: PatientCreate):
-    new_patient = Patient(**patient_data.dict())
+    new_patient = Patient(**patient_data.model_dump())
     db.add(new_patient)
     db.commit()
     db.refresh(new_patient)
@@ -24,7 +24,7 @@ def update_patient(db: Session, pid: str, patient_update: PatientUpdate):
     patient = get_patient(db, pid=pid)
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
-    for key, value in patient_update.dict(exclude_unset=True).items():
+    for key, value in patient_update.model_dump(exclude_unset=True).items():
         setattr(patient, key, value)
     db.commit()
     db.refresh(patient)

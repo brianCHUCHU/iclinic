@@ -2,6 +2,9 @@ import pytest
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text  # 必须导入 text 函数
 from utils.db import get_db  # Adjust import based on your project structure
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models.base import Base
 
 
 def test_database_connection():
