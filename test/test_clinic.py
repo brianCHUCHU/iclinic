@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 from main import app
 
@@ -47,3 +48,4 @@ def test_get_clinic_by_id():
     response = client.get("/clinics/C001")
     assert response.status_code == 404
     assert response.json().get("detail") == "Clinic not found"
+
