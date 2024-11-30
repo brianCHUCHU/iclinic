@@ -1,21 +1,22 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import os
 from contextlib import contextmanager
+from dotenv import load_dotenv
+import os
 
-# 資料庫配置
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "db_project"
-DB_USER = "user"
+# 加載 .env 文件
+load_dotenv(dotenv_path="secrets/.env")
 
-# 讀取密碼
-PASSWORD_FILE = "secrets/db_password.txt"
-try:
-    with open(PASSWORD_FILE, "r") as file:
-        DB_PASSWORD = file.read().strip()
-except FileNotFoundError:
-    raise Exception(f"Password file not found at {PASSWORD_FILE}. Ensure it exists and contains the correct password.")
+# 從環境變數讀取配置
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "iclinic")
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+
+# 檢查是否讀取成功
+if not DB_PASSWORD:
+    raise Exception("Database password not found. Check your secrets/.env file.")
 
 # 建立資料庫連接字串
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
