@@ -1,0 +1,76 @@
+列出磁碟區 Data 的資料夾 PATH
+磁碟區序號為 5097-864B
+D:.
+│  .gitignore
+│  directory-structure.txt
+│  main.py
+│  README.md
+│  requirements.txt
+│  test.backup
+│  
+├─.pytest_cache
+│  │  .gitignore
+│  │  CACHEDIR.TAG
+│  │  README.md
+│  │  
+│  └─v
+│      └─cache
+│              lastfailed
+│              nodeids
+│              stepwise
+│              
+├─models
+│  │  clinic.py
+│  │  membership.py
+│  │  patient.py
+│  │  
+│  └─__pycache__
+│          clinic.cpython-311.pyc
+│          clinic.cpython-312.pyc
+│          
+├─routes
+│  │  clinic_routes.py
+│  │  
+│  └─__pycache__
+│          clinic_routes.cpython-311.pyc
+│          clinic_routes.cpython-312.pyc
+│          
+├─schemas
+│  │  clinic.py
+│  │  patient.py
+│  │  
+│  └─__pycache__
+│          clinic.cpython-311.pyc
+│          clinic.cpython-312.pyc
+│          
+├─secrets
+│      db_password.txt
+│      
+├─services
+│  │  clinic_service.py
+│  │  membership_service.py
+│  │  patient_service.py
+│  │  
+│  └─__pycache__
+│          clinic_service.cpython-311.pyc
+│          clinic_service.cpython-312.pyc
+│          
+├─test
+│  │  test_clinic.py
+│  │  test_db_connection.py
+│  │  
+│  └─__pycache__
+│          test_clinic.cpython-311-pytest-8.3.3.pyc
+│          test_db_connection.cpython-311-pytest-8.3.3.pyc
+│          
+├─utils
+│  │  db.py
+│  │  
+│  └─__pycache__
+│          db.cpython-311.pyc
+│          db.cpython-312.pyc
+│          
+└─__pycache__
+        main.cpython-311.pyc
+        main.cpython-312.pyc
+        
