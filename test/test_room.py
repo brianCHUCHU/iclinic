@@ -24,4 +24,4 @@ def test_update_room():
     response = client.put("/room", json=payload)
     assert response.status_code == 200
     assert response.json().get("message") == "Room name updated successfully"
-    assert response.json().get("room").get("rname") == "200"
+    assert response.json().get("room").get("rname") == payload["rname"]

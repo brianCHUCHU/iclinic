@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from utils.db import test_db_connection
 from routes.clinic_routes import clinic_router
 from routes.room_routes import room_router
+from routes.doctor_routes import doctor_router
 from contextlib import asynccontextmanager
 
 app = FastAPI()
@@ -23,3 +24,4 @@ def read_root():
 # Include routes for clinics
 app.include_router(clinic_router)
 app.include_router(room_router)
+app.include_router(doctor_router)
