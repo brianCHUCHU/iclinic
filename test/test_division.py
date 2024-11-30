@@ -20,12 +20,12 @@ valid_division_data = {
 def test_get_division_by_id():
     division_id = valid_division_data["divid"]
 
-    response = client.get(f"/divisions/{division_id}")
+    response = client.get(f"/divisions?divid={division_id}")
     assert response.status_code == 200
     assert response.json()["divid"] == division_id
 
 def test_get_non_existent_division():
-    response = client.get("/divisions/999")
+    response = client.get("/divisions?divid=invalid")
     assert response.status_code == 404
     assert response.json()["detail"] == "Division not found"
 

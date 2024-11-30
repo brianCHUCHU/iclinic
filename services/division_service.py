@@ -27,8 +27,9 @@ def delete_division(db: Session, divid: str):
         return db_division
     return None
 
-def get_division_by_id(db: Session, divid: str):
-    return db.query(Division).filter(Division.divid == divid).first()
-
-def get_division_by_name(db: Session, divname: str):
-    return db.query(Division).filter(Division.divname == divname).first()
+def get_division(db: Session, divid: str = None, divname: str = None):
+    if divid:
+        return db.query(Division).filter(Division.divid == divid).first()
+    elif divname:
+        return db.query(Division).filter(Division.divname == divname).first()
+    return None 
