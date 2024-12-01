@@ -14,13 +14,7 @@ def create_doctor_endpoint(doctor: DoctorCreate, db: Session = Depends(get_db)):
 
 @doctor_router.put("/doctor", status_code=200)
 def update_doctor_name_endpoint(doctor: DoctorUpdate, db: Session = Depends(get_db)):
-    doctor_to_update = db.query(Doctor).filter(doctor.docid == doctor.docid).first()
-    
-    if not doctor_to_update:
-        raise HTTPException(status_code=404, detail="Doctor not found")
-    
-    doctor_to_update.docname = doctor.docname
-    db.commit()
-    db.refresh(doctor_to_update)
+    result = update_doctor_name(db=db, docid=doctor.docid, new_name=doctor)  # 調用 update_doctor_name
+    return result
 
     return {"message": "Doctor name updated successfully", "doctor": doctor_to_update}
