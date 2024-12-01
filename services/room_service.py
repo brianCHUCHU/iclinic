@@ -36,8 +36,8 @@ def get_room(db: Session, rid: str = None, cid: str = None, rname: str = None):
     if cid:
         query = query.filter(Room.cid == cid)
     if rname:
-        query = query.filter(Room.rname == cid)
+        query = query.filter(Room.rname == rname)
     rooms = query.all()
     if not rooms:
-        raise HTTPException(status_code=400, detail="Invalid query parameters")
+        raise HTTPException(status_code=404, detail="No rooms found")
     return rooms
