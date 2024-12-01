@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models import Schedule
+from ..models.schedule import Schedule
 from ..schemas import ScheduleCreate
 
 def create_schedule(db: Session, schedule_data: ScheduleCreate):

@@ -4,9 +4,11 @@ from models.clinic import Clinic
 from models.division import Division
 from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreate
 from fastapi import HTTPException
-from passlib.context import CryptContext
+from utils.id_validation import id_check
 
 def create_doctor(db: Session, doctor_data: DoctorCreate):
+    if not id_check(doctor_data.docid):
+        raise HTTPException(status_code=400, detail="Invalid doctor id")
     new_doctor = Doctor(
         docid=doctor_data.docid,
         docname=doctor_data.docname,
@@ -26,6 +28,8 @@ def update_doctor_name(db: Session, docid: str, new_name: DoctorUpdate):
     return {"message": "Doctor name updated successfully", "doctor": doctor}
 
 def get_doctor(db: Session, docid: str = None, docname: str = None):
+    if docid and not id_check(docid):
+        raise HTTPException(status_code=400, detail="Invalid doctor id")
     if docid:
         return db.query(Doctor).filter(Doctor.docid == docid).first()
     elif docname:
@@ -33,7 +37,6 @@ def get_doctor(db: Session, docid: str = None, docname: str = None):
     return None
 
 def create_hire(db: Session, hire_data: HireCreate):
-
     new_hire = Hire(
         docid=hire_data.docid,
         cid=hire_data.cid,
@@ -58,6 +61,8 @@ def update_hire(db: Session, docid: str, cid: str, divid: str, hire_update: Hire
     return {"message": "Hire updated successfully", "hire": hire}
 
 def get_hire(db: Session, docid: str = None, cid: str = None, divid: str = None, docname: str = None):
+    if docid and not id_check(docid):
+        raise HTTPException(status_code=400, detail="Invalid doctor id")
     query = db.query(Hire).filter(Hire.enddate == None)
 
     # 可選條件動態加入
@@ -84,6 +89,8 @@ def get_hire(db: Session, docid: str = None, cid: str = None, divid: str = None,
 
 # create doctor if doctor not exists, then create hire, if hire exists, update hire
 def create_or_update_hire(db: Session, data: DoctorAndHireCreate):
+    if not id_check(data.docid):
+        raise HTTPException(status_code=400, detail="Invalid doctor id")
     # Step 1: Ensure the doctor exists using get_doctor
     doctor = get_doctor(db, docid=data.docid)
     if not doctor:
