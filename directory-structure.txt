@@ -1,76 +1,76 @@
-¦C¥XºÏºÐ°Ï Data ªº¸ê®Æ§¨ PATH
-ºÏºÐ°Ï§Ç¸¹¬° 5097-864B
+ï¿½Cï¿½Xï¿½ÏºÐ°ï¿½ Data ï¿½ï¿½ï¿½ï¿½Æ§ï¿½ PATH
+ï¿½ÏºÐ°Ï§Ç¸ï¿½ï¿½ï¿½ 5097-864B
 D:.
-¢x  .gitignore
-¢x  directory-structure.txt
-¢x  main.py
-¢x  README.md
-¢x  requirements.txt
-¢x  test.backup
-¢x  
-¢u¢w.pytest_cache
-¢x  ¢x  .gitignore
-¢x  ¢x  CACHEDIR.TAG
-¢x  ¢x  README.md
-¢x  ¢x  
-¢x  ¢|¢wv
-¢x      ¢|¢wcache
-¢x              lastfailed
-¢x              nodeids
-¢x              stepwise
-¢x              
-¢u¢wmodels
-¢x  ¢x  clinic.py
-¢x  ¢x  membership.py
-¢x  ¢x  patient.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          clinic.cpython-311.pyc
-¢x          clinic.cpython-312.pyc
-¢x          
-¢u¢wroutes
-¢x  ¢x  clinic_routes.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          clinic_routes.cpython-311.pyc
-¢x          clinic_routes.cpython-312.pyc
-¢x          
-¢u¢wschemas
-¢x  ¢x  clinic.py
-¢x  ¢x  patient.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          clinic.cpython-311.pyc
-¢x          clinic.cpython-312.pyc
-¢x          
-¢u¢wsecrets
-¢x      db_password.txt
-¢x      
-¢u¢wservices
-¢x  ¢x  clinic_service.py
-¢x  ¢x  membership_service.py
-¢x  ¢x  patient_service.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          clinic_service.cpython-311.pyc
-¢x          clinic_service.cpython-312.pyc
-¢x          
-¢u¢wtest
-¢x  ¢x  test_clinic.py
-¢x  ¢x  test_db_connection.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          test_clinic.cpython-311-pytest-8.3.3.pyc
-¢x          test_db_connection.cpython-311-pytest-8.3.3.pyc
-¢x          
-¢u¢wutils
-¢x  ¢x  db.py
-¢x  ¢x  
-¢x  ¢|¢w__pycache__
-¢x          db.cpython-311.pyc
-¢x          db.cpython-312.pyc
-¢x          
-¢|¢w__pycache__
+ï¿½x  .gitignore
+ï¿½x  directory-structure.txt
+ï¿½x  main.py
+ï¿½x  README.md
+ï¿½x  requirements.txt
+ï¿½x  test.backup
+ï¿½x  
+ï¿½uï¿½w.pytest_cache
+ï¿½x  ï¿½x  .gitignore
+ï¿½x  ï¿½x  CACHEDIR.TAG
+ï¿½x  ï¿½x  README.md
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½wv
+ï¿½x      ï¿½|ï¿½wcache
+ï¿½x              lastfailed
+ï¿½x              nodeids
+ï¿½x              stepwise
+ï¿½x              
+ï¿½uï¿½wmodels
+ï¿½x  ï¿½x  clinic.py
+ï¿½x  ï¿½x  membership.py
+ï¿½x  ï¿½x  patient.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          clinic.cpython-311.pyc
+ï¿½x          clinic.cpython-312.pyc
+ï¿½x          
+ï¿½uï¿½wroutes
+ï¿½x  ï¿½x  clinic_routes.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          clinic_routes.cpython-311.pyc
+ï¿½x          clinic_routes.cpython-312.pyc
+ï¿½x          
+ï¿½uï¿½wschemas
+ï¿½x  ï¿½x  clinic.py
+ï¿½x  ï¿½x  patient.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          clinic.cpython-311.pyc
+ï¿½x          clinic.cpython-312.pyc
+ï¿½x          
+ï¿½uï¿½wsecrets
+ï¿½x      db_password.txt
+ï¿½x      
+ï¿½uï¿½wservices
+ï¿½x  ï¿½x  clinic_service.py
+ï¿½x  ï¿½x  membership_service.py
+ï¿½x  ï¿½x  patient_service.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          clinic_service.cpython-311.pyc
+ï¿½x          clinic_service.cpython-312.pyc
+ï¿½x          
+ï¿½uï¿½wtest
+ï¿½x  ï¿½x  test_clinic.py
+ï¿½x  ï¿½x  test_db_connection.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          test_clinic.cpython-311-pytest-8.3.3.pyc
+ï¿½x          test_db_connection.cpython-311-pytest-8.3.3.pyc
+ï¿½x          
+ï¿½uï¿½wutils
+ï¿½x  ï¿½x  db.py
+ï¿½x  ï¿½x  
+ï¿½x  ï¿½|ï¿½w__pycache__
+ï¿½x          db.cpython-311.pyc
+ï¿½x          db.cpython-312.pyc
+ï¿½x          
+ï¿½|ï¿½w__pycache__
         main.cpython-311.pyc
         main.cpython-312.pyc
         

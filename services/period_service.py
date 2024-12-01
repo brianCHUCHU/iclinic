@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from ..models import Period
+from ..models.period import Period
 from ..schemas import PeriodCreate
 
 def create_period(db: Session, period_data: PeriodCreate):

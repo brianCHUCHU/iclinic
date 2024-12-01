@@ -26,7 +26,7 @@ client = TestClient(app)
 
 def test_create_hire():
     payload = {
-        "docid": "D000000001",
+        "docid": "T124488950",
         'docname': 'Shirokami Fubuki',
         "cid": "C001",
         "divid": "D01",
@@ -40,7 +40,7 @@ def test_create_hire():
 
 def test_update_hire():
     payload = {
-        "docid": "D000000001",
+        "docid": "T124488950",
         "cid": "C001",
         "divid": "D01",
         "enddate": "2022-12-31"

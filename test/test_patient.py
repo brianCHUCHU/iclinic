@@ -5,7 +5,7 @@ client = TestClient(app)
 
 def test_create_patient():
     payload = {
-        "pid": "P000000001",
+        "pid": "T124488950",
         "pname": "John Doe",
         "birthdate": "1990-01-01",
         "gender": "M",
@@ -18,7 +18,7 @@ def test_create_patient():
     assert response.json()["patient"]["pid"] == payload["pid"]
 
 def test_get_patient_id():
-    pid = "P000000001"
+    pid = "T124488950"
     response = client.get(f"/patients?pid={pid}")
     assert response.status_code == 200
     assert response.json()["patient"]["pid"] == pid
@@ -30,7 +30,7 @@ def test_get_patient_name():
     assert response.json()["patient"][0]["pname"] == pname
 
 def test_update_patient():
-    pid = "P000000001"
+    pid = "T124488950"
     payload = {
         "pname": "John Smith",
         "status": "I"
@@ -43,7 +43,7 @@ def test_update_patient():
     assert response.json()["patient"]["status"] == payload["status"]
 
 def test_delete_patient():
-    pid = "P000000001"
+    pid = "T124488950"
     response = client.delete(f"/patients/{pid}")
     assert response.status_code == 200
     assert response.json()["message"] == "Patient deleted successfully"

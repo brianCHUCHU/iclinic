@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_clinic(db: Session, clinic_data: ClinicCreate):
+
     # 密碼加密
     hashed_password = pwd_context.hash(clinic_data.acct_pw)
     
