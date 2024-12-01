@@ -10,7 +10,7 @@ class Doctor(Base):
     docname = Column(String(20), nullable=False)  # Doctor Name
 
     # Relationships (if necessary)
-    hires = relationship("Hire", back_populates="doctor", cascade="all, delete, save-update")
+    hires = relationship("Hire", cascade="all, delete, save-update")
 
 class Hire(Base):
     __tablename__ = "hire"

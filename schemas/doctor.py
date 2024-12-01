@@ -23,5 +23,17 @@ class HireBase(BaseModel):
 class HireCreate(HireBase):
     pass
 
-class HireUpdate(HireBase):
+class HireUpdate(BaseModel):
+    startdate : Optional[str]
+    enddate : Optional[str]
+
+class DoctorAndHireBase(BaseModel):
+    docid: str
+    docname: Optional[str] = None
+    cid: str
+    divid: str
+    startdate: Optional[str] = None
+    enddate: Optional[str] = None
+
+class DoctorAndHireCreate(DoctorAndHireBase):
     pass

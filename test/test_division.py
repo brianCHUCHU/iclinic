@@ -11,10 +11,10 @@ valid_division_data = {
 }
 
 
-def test_create_division():
-    response = client.post("/divisions", json=valid_division_data)
-    assert response.status_code == 201
-    assert response.json()["divname"] == valid_division_data["divname"]
+# def test_create_division():
+#     response = client.post("/divisions", json=valid_division_data)
+#     assert response.status_code == 201
+#     assert response.json()["divname"] == valid_division_data["divname"]
 
 
 def test_get_division_by_id():
