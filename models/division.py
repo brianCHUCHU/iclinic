@@ -20,6 +20,6 @@ class Division(Base):
         '中醫針灸科', '中醫痔科'
     ]
 
-    # # Relationships (if necessary)
-    # # Example:
-    # treatments = relationship("Treatment", back_populates="division")
+    # Relationships (if necessary)
+    # Example:
+    hires = relationship("Hire", back_populates="division", cascade="all, delete, save-update")

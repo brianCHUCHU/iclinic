@@ -13,3 +13,15 @@ class DoctorCreate(DoctorBase):
 class DoctorUpdate(DoctorBase):
     pass
 
+class HireBase(BaseModel):
+    docid : str
+    cid : str
+    divid : str
+    startdate : Optional[str] = None
+    enddate : Optional[str] = None
+
+class HireCreate(HireBase):
+    pass
+
+class HireUpdate(HireBase):
+    pass

@@ -19,3 +19,4 @@ class Clinic(Base):
 
     # Relationships
     rooms = relationship("Room", back_populates="clinic", cascade="all, delete, save-update")
+    hires = relationship("Hire", back_populates="clinic", cascade="all, delete, save-update")
