@@ -14,7 +14,18 @@ class Appointment(Base):
     status = Column(String(1), nullable=False)  # Status ('P' for pending, 'R' for rejected, 'C' for cancelled, 'O' for on-site application)
     attendance = Column(Boolean, nullable=False)  # Attendance status (1 for attended, 0 for not attended)
 
-    # Relationships (if necessary)
-    # Example:
+    # Relationships
     patient = relationship("Patient", back_populates="appointments")
     schedule = relationship("Schedule", back_populates="appointments")
+
+    # 修改 remarks 關聯，顯式指定 foreign_keys 和 primaryjoin
+    remarks = relationship(
+        "AppointmentRemark",
+        back_populates="appointment",
+        foreign_keys="[AppointmentRemark.pid, AppointmentRemark.sid, AppointmentRemark.date, AppointmentRemark.order]",
+        primaryjoin="and_(Appointment.pid == AppointmentRemark.pid, "
+                    "Appointment.sid == AppointmentRemark.sid, "
+                    "Appointment.date == AppointmentRemark.date, "
+                    "Appointment.order == AppointmentRemark.order)",
+        cascade="all, delete-orphan"
+    )

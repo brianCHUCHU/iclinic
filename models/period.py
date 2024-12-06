@@ -14,3 +14,4 @@ class Period(Base):
 
     # Relationships (optional)
     clinic = relationship("Clinic", back_populates="periods")
+    schedules = relationship("Schedule", back_populates="period")

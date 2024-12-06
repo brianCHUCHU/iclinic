@@ -26,3 +26,4 @@ def get_hire(db: Session = Depends(get_db), docid: str = None, cid: str = None, 
 def create_or_update_hire_endpoint(hire: DoctorAndHireCreate, db: Session = Depends(get_db)):
     result = create_or_update_hire(db=db, data=hire)
     return result
+

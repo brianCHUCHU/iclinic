@@ -13,8 +13,18 @@ class AppointmentRemark(Base):
     text = Column(String(4000), nullable=False)  # Content of the Remark
     datetime = Column(TIMESTAMP, primary_key=True, nullable=False)  # Datetime of Remark Commented
 
-    # Relationships (if necessary, based on other models)
-    # Example:
+    # Relationships
     patient = relationship("Patient", back_populates="appointmentremarks")
     schedule = relationship("Schedule", back_populates="appointmentremarks")
-    appointment = relationship("Appointment", back_populates="appointmentremarks")
+
+    # 修改與 Appointment 的關聯，並顯式指定 foreign_keys
+    appointment = relationship(
+        "Appointment",
+        back_populates="remarks",
+        foreign_keys="[AppointmentRemark.pid, AppointmentRemark.sid, AppointmentRemark.date, AppointmentRemark.order]",
+        primaryjoin="and_(AppointmentRemark.pid == Appointment.pid, "
+                    "AppointmentRemark.sid == Appointment.sid, "
+                    "AppointmentRemark.date == Appointment.date, "
+                    "AppointmentRemark.order == Appointment.order)",
+        cascade="all, delete-orphan"
+    )

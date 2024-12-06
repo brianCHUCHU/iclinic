@@ -11,6 +11,8 @@ class Patient(Base):
     status = Column(String(1), nullable=False)
 
     # 關聯 Membership
-    # membership = relationship("Membership", back_populates="patient", uselist=False)
+    membership = relationship("Membership", back_populates="patient", uselist=False)
 
-
+    # 關聯 Appointment (新增的部分)
+    appointments = relationship("Appointment", back_populates="patient")
+    appointmentremarks = relationship("AppointmentRemark", back_populates="patient")

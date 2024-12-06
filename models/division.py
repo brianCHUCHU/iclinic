@@ -23,3 +23,5 @@ class Division(Base):
     # Relationships (if necessary)
     # Example:
     hires = relationship("Hire", cascade="all, delete, save-update")
+    schedules = relationship("Schedule", back_populates="division")
+    
