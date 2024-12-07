@@ -17,14 +17,14 @@ def create_treatment(db: Session, treatment_data: TreatmentCreate):
     db.refresh(new_treatment)
     return {"message": "Treatment created successfully","Treatment":new_treatment}
 
-def update_treatment_name(db: Session, tid: str, new_name: TreatmentUpdate):
+def update_treatment(db: Session, tid: str, new: TreatmentUpdate):
     treatment = db.query(Treatment).filter_by(tid=tid).first()
     if not treatment:
         raise HTTPException(status_code=404, detail="Treatment not found")
-    if new_name.tname:
-        treatment.tname = new_name.tname
-    if new_name.available:
-        treatment.available = new_name.available
+    if new.tname:
+        treatment.tname = new.tname
+    if new.available is not None:
+        treatment.available = new.available
     db.commit()
     db.refresh(treatment)
     return {"message": "Treatment name updated successfully", "treatment": treatment}

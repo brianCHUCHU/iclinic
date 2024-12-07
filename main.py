@@ -7,6 +7,8 @@ from routes.room_routes import room_router
 from routes.doctor_routes import doctor_router
 from routes.patient_routes import patient_router
 from routes.treatment_routes import treatment_router
+from routes.period_routes import period_router
+from routes.schedule_routes import schedule_router
 from contextlib import asynccontextmanager
 
 app = FastAPI()
@@ -33,3 +35,5 @@ app.include_router(doctor_router)
 app.include_router(patient_router)
 app.include_router(division_router)
 app.include_router(treatment_router)
+app.include_router(period_router)
+app.include_router(schedule_router)
