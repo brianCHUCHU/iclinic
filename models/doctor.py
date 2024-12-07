@@ -12,6 +12,7 @@ class Doctor(Base):
     # Relationships (if necessary)
     hires = relationship("Hire", cascade="all, delete, save-update")
     treatments = relationship("Treatment" ,cascade="all, delete, save-update")
+    schedules = relationship("Schedule" ,cascade="all, delete, save-update")
 
 class Hire(Base):
     __tablename__ = "hire"

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from models.treatment import Treatment
-from services.treatment_service import create_treatment ,update_treatment_name ,get_treatment
+from services.treatment_service import create_treatment ,update_treatment ,get_treatment
 from utils.db import get_db
 from schemas.treatment import TreatmentCreate ,TreatmentUpdate
 
@@ -13,8 +13,8 @@ def create_treatment_endpoint(treatment: TreatmentCreate ,db: Session = Depends(
     return result
 
 @treatment_router.put("/treatment", status_code=200)
-def update_treatment_name_endpoint(treatment: TreatmentUpdate, db: Session = Depends(get_db)):
-    result = update_treatment_name(db=db, tid=treatment.tid, new_name=treatment)
+def update_treatment_endpoint(treatment: TreatmentUpdate, db: Session = Depends(get_db)):
+    result = update_treatment(db=db, tid=treatment.tid, new=treatment)
     return result
 
 @treatment_router.get("/treatment")

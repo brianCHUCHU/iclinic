@@ -10,8 +10,8 @@ class Period(Base):
     weekday = Column(Integer, nullable=False)  # Weekday (1~7)
     starttime = Column(Time, nullable=False)  # Start Time
     endtime = Column(Time, nullable=False)  # End Time
-    available = Column(Boolean, nullable=False)  # Availability Status: 1 (True), 0 (False)
     available = Column(String(1), nullable=False)
     
     # Relationships (optional)
     clinic = relationship("Clinic", back_populates="periods")
+    schedules = relationship("Schedule" ,cascade="all, delete, save-update")
