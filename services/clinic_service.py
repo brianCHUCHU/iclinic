@@ -8,6 +8,9 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_clinic(db: Session, clinic_data: ClinicCreate):
+    existing_clinic = db.query(Clinic).filter_by(cid=clinic_data.cid).first()
+    if existing_clinic:
+        raise HTTPException(status_code=400, detail="Clinic already exists")
 
     # 密碼加密
     hashed_password = pwd_context.hash(clinic_data.acct_pw)

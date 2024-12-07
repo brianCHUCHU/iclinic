@@ -9,7 +9,7 @@ class RoomSchedule(Base):
     sid = Column(String(20), ForeignKey("schedule.sid", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)  # Schedule ID
     rid = Column(String(10), ForeignKey("room.rid", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)  # Room ID
     cid = Column(String(10), ForeignKey("clinic.cid", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)  # Clinic ID
-    available = Column(Boolean, nullable=False)  # Availability status (1 for Available, 0 for Not Available)
+    available = Column(String(1), nullable=False)  # Availability status (1 for Available, 0 for Not Available)
 
     # Relationships (if necessary)
     # Example:

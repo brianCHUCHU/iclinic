@@ -9,12 +9,9 @@ def create_room(db: Session, room_data: RoomCreate):
     existing_room = db.query(Room).filter_by(rid=room_data.rid, cid=room_data.cid).first()
     if existing_room:
         raise HTTPException(status_code=400, detail="Room already exists")
+    room_dict = room_data.model_dump()
+    new_room = Room(**room_dict)
 
-    new_room = Room(
-        rid=room_data.rid,
-        cid=room_data.cid,
-        rname=room_data.rname,
-    )
     db.add(new_room)
     db.commit()
     db.refresh(new_room)
@@ -24,7 +21,10 @@ def update_room_name(db: Session, rid: str, new_name: RoomUpdate):
     room = db.query(Room).filter_by(rid=rid).first()
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
-    room.rname = new_name.rname
+    if new_name.rname:
+        room.rname = new_name.rname
+    if new_name.available is not None:
+        room.available = new_name.available
     db.commit()
     db.refresh(room)
     return {"message": "Room name updated successfully", "room": room}

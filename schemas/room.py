@@ -7,12 +7,12 @@ class RoomBase(BaseModel):
     rid : str
     cid : str
     rname : str
+    available : bool
 
 class RoomCreate(RoomBase):
-    pass
+    rname : str = None
+    available : bool = True
 
 class RoomUpdate(RoomBase):
-    rid: str
-    rname: str
-    cid: Optional[str]
-
+    rname : str = None
+    available : bool = None

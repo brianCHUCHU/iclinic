@@ -23,3 +23,4 @@ class Division(Base):
     # Relationships (if necessary)
     # Example:
     hires = relationship("Hire", cascade="all, delete, save-update")
+    treatments = relationship("Treatment" ,cascade="all, delete, save-update")
