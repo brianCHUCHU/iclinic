@@ -1,3 +1,4 @@
 drawio放在src裡面 dictionary更改的部分用紫色標起來了 然後新增了clinic clinicdivision treatment room 的available
 喔然後還有在iclinic下面新增了一個changelog.txt
 把model中的Boolean改成String(1)，chatGPT說這樣比較保險，我也不確定，如果爆炸了再改回來。
+把上面提到的string改回bool，然後修正room和treatment，其中有補上散落在doc, div ,c中的relationships

@@ -23,3 +23,4 @@ class Clinic(Base):
     # Relationships
     rooms = relationship("Room", cascade="all, delete, save-update")
     hires = relationship("Hire", cascade="all, delete, save-update")
+    treatments = relationship("Treatment" ,cascade="all, delete, save-update")

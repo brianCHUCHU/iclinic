@@ -8,12 +8,16 @@ class TreatmentBase(BaseModel):
     divid : str
     cid : str
     tname: str
-    available : str
+    available : bool
 
 class TreatmentCreate(TreatmentBase):
     tname: str = None
-    available : str = "1"
+    available : bool = True
 
 class TreatmentUpdate(TreatmentBase):
+    tid : str
+    docid : str = None
+    divid : str = None
+    cid : str = None
     tname : str = None
-    available : str = None
+    available : bool = None

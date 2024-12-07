@@ -14,17 +14,18 @@ client = TestClient(app)
 #     assert response.json().get("message") == "Room created successfully"
 
 
-# def test_update_room():
-#     payload = {
-#         "rid" : "R000000001",
-#         "cid":"C001",
-#         "rname" : "200" 
-#     }
+def test_update_room():
+    payload = {
+        "rid" : "R000000001",
+        "cid":"C001",
+        "rname" : "200",
+        "available" : False
+    }
 
-#     response = client.put("/room", json=payload)
-#     assert response.status_code == 200
-#     assert response.json().get("message") == "Room name updated successfully"
-#     assert response.json().get("room").get("rname") == payload["rname"]
+    response = client.put("/room", json=payload)
+    assert response.status_code == 200
+    assert response.json().get("message") == "Room name updated successfully"
+    assert response.json().get("room").get("rname") == payload["rname"]
 
 def test_get_rooms_by_rid():
     # 測試根據 rid 查詢

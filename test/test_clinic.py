@@ -14,27 +14,28 @@ client = TestClient(app)
 #         "city": "Taipei",
 #         "district": "Da'an",
 #         "address": "123 Health St."
+
 #     }
 #     response = client.post("/clinics", json=payload)
 #     assert response.status_code == 201
 #     assert response.json().get("message") == "Clinic created successfully"
 
-# # test update
-# def test_update_clinic():
-#     payload = {
-#         "cid": "C001",
-#         "fee": 600,
-#         "queue_type": 'I',
-#         "acct_name": "clinic_admin",
-#         "acct_pw": "securepassword",
-#         "cname": "Best Clinic",
-#         "city": "Taipei",
-#         "district": "Da'an",
-#         "address": "123 Health St."
-#     }
-#     response = client.put("/clinics/C001", json=payload)
-#     assert response.status_code == 200
-#     assert response.json().get("message") == "Clinic updated successfully"
+# test update
+def test_update_clinic():
+    payload = {
+        "cid": "C001",
+        "fee": 600,
+        "queue_type": 'I',
+        "acct_name": "clinic_admin",
+        "acct_pw": "securepassword",
+        "cname": "Best Clinic",
+        "city": "Taipei",
+        "district": "Da'an",
+        "address": "123 Health St."
+    }
+    response = client.put("/clinics/C001", json=payload)
+    assert response.status_code == 200
+    assert response.json().get("message") == "Clinic updated successfully"
 
 # # test delete
 # def test_delete_clinic():

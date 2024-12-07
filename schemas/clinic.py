@@ -11,12 +11,12 @@ class ClinicBase(BaseModel):
     city: str
     district: str
     address: str
-    available : str
+    available : bool
 
 class ClinicCreate(ClinicBase):
     cid: str
     acct_pw: str
-    available : str = "1"
+    available : bool = True
 
 class ClinicUpdate(BaseModel):
     fee: int = None
