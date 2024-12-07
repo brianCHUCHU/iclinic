@@ -1,0 +1,2 @@
+drawio放在src裡面 dictionary更改的部分用紫色標起來了 然後新增了clinic treatment room 三項的available
+喔然後還有在iclinic下面新增了一個changelog.txt
