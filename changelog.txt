@@ -1,2 +1,3 @@
-drawio放在src裡面 dictionary更改的部分用紫色標起來了 然後新增了clinic treatment room 三項的available
+drawio放在src裡面 dictionary更改的部分用紫色標起來了 然後新增了clinic clinicdivision treatment room 的available
 喔然後還有在iclinic下面新增了一個changelog.txt
+把model中的Boolean改成String(1)，chatGPT說這樣比較保險，我也不確定，如果爆炸了再改回來。

@@ -8,6 +8,7 @@ class Room(Base):
     rid = Column(String(10), primary_key=True)
     cid = Column(String(20), ForeignKey("clinic.cid", ondelete="CASCADE", onupdate="CASCADE"), primary_key=True)
     rname = Column(String(5), nullable=False)
-
+    available = Column(String(1), nullable=False)
+    
     # Relationship to Clinic
     clinic = relationship("Clinic", back_populates="rooms")

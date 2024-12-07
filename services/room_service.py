@@ -24,7 +24,10 @@ def update_room_name(db: Session, rid: str, new_name: RoomUpdate):
     room = db.query(Room).filter_by(rid=rid).first()
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
-    room.rname = new_name.rname
+    if new_name.rname:
+        room.rname = new_name.rname
+    if new_name.available:
+        room.available = new_name.available
     db.commit()
     db.refresh(room)
     return {"message": "Room name updated successfully", "room": room}
