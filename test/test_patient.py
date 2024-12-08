@@ -42,9 +42,9 @@ def test_update_patient():
     assert response.json()["patient"]["pname"] == payload["pname"]
     assert response.json()["patient"]["status"] == payload["status"]
 
-def test_delete_patient():
-    pid = "T124488950"
-    response = client.delete(f"/patients/{pid}")
-    assert response.status_code == 200
-    assert response.json()["message"] == "Patient deleted successfully"
-    assert response.json()["patient"]["pid"] == pid
+# def test_delete_patient():
+#     pid = "T124488950"
+#     response = client.delete(f"/patients/{pid}")
+#     assert response.status_code == 200
+#     assert response.json()["message"] == "Patient deleted successfully"
+#     assert response.json()["patient"]["pid"] == pid

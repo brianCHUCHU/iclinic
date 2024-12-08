@@ -1,7 +1,7 @@
 # coding: utf-8
 from sqlalchemy import Boolean, CHAR, CheckConstraint, Column, Date, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Numeric, String, Time
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -169,9 +169,8 @@ class Appointment(Base):
     date = Column(Date, primary_key=True, nullable=False)
     order = Column(Integer, primary_key=True, nullable=False)
     applytime = Column(DateTime, nullable=False)
-    applydate = Column(Date, nullable=False)
-    cancelled = Column(Boolean, nullable=False)
-    rejected = Column(Boolean, nullable=False)
+    status = Column(String(1), nullable=False)
+    attendance = Column(Boolean, nullable=False)
 
     patient = relationship('Patient')
     schedule = relationship('Schedule')
@@ -185,8 +184,8 @@ class Reservation(Base):
     date = Column(Date, primary_key=True, nullable=False)
     applytime = Column(DateTime, nullable=False)
     tid = Column(ForeignKey('treatment.tid', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
-    cancelled = Column(Boolean, nullable=False)
-    rejected = Column(Boolean, nullable=False)
+    status = Column(String(1), nullable=False)
+    attendance = Column(Boolean, nullable=False)
 
     patient = relationship('Patient')
     schedule = relationship('Schedule')

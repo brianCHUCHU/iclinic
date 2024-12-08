@@ -43,3 +43,13 @@ def delete_patient(db: Session, pid: str):
     db.delete(patient)
     db.commit()
     return patient
+
+def generate_patient(db: Session, pid: str):
+    if not id_check(patient_data.pid):
+        raise HTTPException(status_code=400, detail="Invalid patient id")
+    new_patient = Patient(**patient_data.model_dump())
+    db.add(new_patient)
+    db.commit()
+    db.refresh(new_patient)
+    return new_patient
+    

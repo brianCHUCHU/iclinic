@@ -4,13 +4,11 @@ client = TestClient(app)
 
 def test_create_appointment():
     payload = {
-        "pid" : "",
-        "sid" : "",
-        "date" : "",
-        "order" : "",
-        "applytime" : "",
-        "status" : "",
-        "attendence" : None
+        "pid" : "T124488950",
+        "sid" : "0000000000",
+        "date" : "2024-01-01",
+        "order" : 2,
+        "applytime" : "2020-05-11 20:50:30",
     }
 
     response = client.post("/appointment", json=payload)
@@ -19,7 +17,11 @@ def test_create_appointment():
 
 def test_update_appointment():
     payload = {
-        "status" : ""
+        "pid" : "T124488950",
+        "sid" : "0000000000",
+        "date" : "2024-01-01",
+        "order" : 2,
+        "status" : "P"
     }
     response = client.put("/appointment", json=payload)
     assert response.status_code == 200

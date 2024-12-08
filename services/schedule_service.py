@@ -51,3 +51,5 @@ def get_schedule(
         raise HTTPException(status_code=404, detail="No schedules found")
     return schedules
 
+
+

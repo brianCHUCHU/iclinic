@@ -44,10 +44,10 @@ def get_appointment(
         pid: str, 
         sid: str, 
         date : str, 
-        order : str, 
+        order : int, 
         applytime: str = None,
         status : str = None,
-        attendence : str = None
+        attendance : str = None
     ):
     query = db.query(Appointment)
     if pid:
@@ -62,8 +62,8 @@ def get_appointment(
         query = query.filter(Appointment.applytime == applytime)
     if status:
         query = query.filter(Appointment.status == status)    
-    if attendence:
-        query = query.filter(Appointment.attendence == attendence)
+    if attendance:
+        query = query.filter(Appointment.attendance == attendance)
     appointments = query.all()
     if not appointments:
         raise HTTPException(status_code=404, detail="No Appointments found")
