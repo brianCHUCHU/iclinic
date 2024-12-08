@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
+from typing import Optional
 
 class PatientBase(BaseModel):
     pname: str
@@ -15,3 +16,17 @@ class PatientUpdate(BaseModel):
     birthdate: date = None
     gender: str = None
     status: str = None
+
+class MembershipCreate(BaseModel):
+    pid: str
+    acctpw: str
+    email: str
+
+class MembershipUpdate(BaseModel):
+    pid: str
+    acctpw: Optional[str]
+    email: Optional[str]
+
+class MembershipAuth(BaseModel):
+    pid: str
+    acctpw: str

@@ -33,8 +33,7 @@ def update_reservation(db: Session, pid: str, sid: str, date: str, applytime: in
         raise HTTPException(status_code=404, detail="Reservation not found")
     reservation_data = new.model_dump()
     for key ,value in reservation_data.items():
-        if value is not None:
-            setattr(reservation ,key ,value)
+        setattr(reservation ,key ,value)
     db.commit()
     db.refresh(reservation)
     return {"message": "Reservation name updated successfully", "reservation": reservation}

@@ -56,14 +56,14 @@ class Patient(Base):
     status = Column(CHAR(1), nullable=False)
 
 
-class Membership(Patient):
+class Membership(Base):
     __tablename__ = 'membership'
 
     pid = Column(ForeignKey('patient.pid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
-    acctname = Column(String(20), nullable=False, unique=True)
-    acctpw = Column(String(30), nullable=False)
+    acctpw = Column(String(100), nullable=False)
     email = Column(String(30), nullable=False, unique=True)
 
+    patient = relationship('Patient')
 
 class Clinicdivision(Base):
     __tablename__ = 'clinicdivision'
