@@ -33,8 +33,7 @@ def update_appointment(db: Session, pid: str, sid: str, date: str, order: int, n
         raise HTTPException(status_code=404, detail="Appointment not found")
     appointment_data = new.model_dump()
     for key ,value in appointment_data.items():
-        if value is not None:
-            setattr(appointment ,key ,value)
+        setattr(appointment ,key ,value)
     db.commit()
     db.refresh(appointment)
     return {"message": "Appointment name updated successfully", "appointment": appointment}

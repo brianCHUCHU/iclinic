@@ -33,7 +33,9 @@ def test_update_patient():
     pid = "T124488950"
     payload = {
         "pname": "John Smith",
-        "status": "I"
+        "status": "I",
+        'birthdate': "1990-01-01",
+        'gender': "M",
     }
 
     response = client.put(f"/patients/{pid}", json=payload)

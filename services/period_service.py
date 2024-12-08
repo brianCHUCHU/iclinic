@@ -39,8 +39,7 @@ def update_period(db: Session, perid: str, new: PeriodUpdate):
         raise HTTPException(status_code=404, detail="Period not found")
     period_data = new.model_dump()
     for key ,value in period_data.items():
-        if value is not None:
-            setattr(period ,key ,value)
+        setattr(period ,key ,value)
     db.commit()
     db.refresh(period)
     return {"message": "Period name updated successfully", "period": period}
