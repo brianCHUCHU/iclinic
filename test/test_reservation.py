@@ -4,12 +4,12 @@ client = TestClient(app)
 
 def test_create_reservation():
     payload = {
-        "pid" : "",
-        "sid" : "",
-        "date" : "",
-        "applytime" : "",
-        "tid" : "",
-        "status" : "",
+        "pid" : "T124488950",
+        "sid" : "0000000000",
+        "date" : "2024-01-01",
+        "applytime" : "2020-05-11 20:50:30",
+        "tid" : "0000000000",
+        "status" : "P",
         "attendance" : None
     }
 
@@ -19,7 +19,11 @@ def test_create_reservation():
 
 def test_update_reservation():
     payload = {
-        "status" : ""
+        "pid" : "T124488950",
+        "sid" : "0000000000",
+        "date" : "2024-01-01",
+        "tid" : "0000000000",
+        "status" : "R"
     }
     response = client.put("/reservation", json=payload)
     assert response.status_code == 200
