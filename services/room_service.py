@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
-from models import Room
+from models import Room, Roomschedule
 from schemas.room import RoomCreate ,RoomUpdate
 from fastapi import HTTPException
-from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound
 
 def create_room(db: Session, room_data: RoomCreate):
