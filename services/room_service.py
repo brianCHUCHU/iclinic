@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.room import Room
+from models import Room
 from schemas.room import RoomCreate ,RoomUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext

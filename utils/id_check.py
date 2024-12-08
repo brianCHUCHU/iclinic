@@ -2,7 +2,7 @@
 import random
 
 
-def id_check(id_number: str) -> bool:
+def id_validator(id_number: str) -> bool:
     """
     驗證台灣身份證字號的格式與檢查碼。
     

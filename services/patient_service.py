@@ -1,12 +1,12 @@
 from sqlalchemy.orm import Session
-from models.patient import Patient
+from models import Patient
 from schemas.patient import PatientCreate, PatientUpdate
 from fastapi import HTTPException
-from utils.id_validation import id_check
+from utils.id_check import id_validator
 
 # 新增病患
 def create_patient(db: Session, patient_data: PatientCreate):
-    if not id_check(patient_data.pid):
+    if not id_validator(patient_data.pid):
         raise HTTPException(status_code=400, detail="Invalid patient id")
     new_patient = Patient(**patient_data.model_dump())
     db.add(new_patient)
@@ -16,7 +16,7 @@ def create_patient(db: Session, patient_data: PatientCreate):
 
 # 查詢病患 (根據 PID 或其他條件)
 def get_patient(db: Session, pid: str = None, pname: str = None):
-    if pid and not id_check(pid):
+    if pid and not id_validator(pid):
         raise HTTPException(status_code=400, detail="Invalid patient id")
     if pid:
         return db.query(Patient).filter(Patient.pid == pid).first()
