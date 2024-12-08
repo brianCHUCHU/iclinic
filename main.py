@@ -12,6 +12,8 @@ from routes.schedule_routes import schedule_router
 from routes.appointment_routes import appointment_router
 from routes.reservation_routes import reservation_router
 from routes.membership_routes import membership_router
+from routes.roomschedule_routes import roomschedule_router
+from routes.clinicdivision_routes import clinicdivision_router
 from contextlib import asynccontextmanager
 
 app = FastAPI()
@@ -43,3 +45,5 @@ app.include_router(schedule_router)
 app.include_router(appointment_router)
 app.include_router(reservation_router)
 app.include_router(membership_router)
+app.include_router(roomschedule_router)
+app.include_router(clinicdivision_router)
