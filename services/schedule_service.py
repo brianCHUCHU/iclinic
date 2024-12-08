@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.schedule import Schedule
+from models import Schedule
 from schemas.schedule import ScheduleCreate ,ScheduleUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext
