@@ -5,7 +5,7 @@ client = TestClient(app)
 def test_create_treatment():
     payload = {
         "tid" : "0000000000",
-        "docid" : "D000000001",
+        "docid" : "T124488950",
         "divid" : "D01",
         "cid" : "C001",
         "tname" : "test"
