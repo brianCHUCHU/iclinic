@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models.treatment import Treatment
+from models import Treatment
 from services.treatment_service import create_treatment ,update_treatment ,get_treatment
 from utils.db import get_db
 from schemas.treatment import TreatmentCreate ,TreatmentUpdate

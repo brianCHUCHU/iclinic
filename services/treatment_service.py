@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.treatment import Treatment
+from models import Treatment
 from schemas.treatment import TreatmentCreate ,TreatmentUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext

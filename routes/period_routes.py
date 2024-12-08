@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models.period import Period
+from models import Period
 from services.period_service import create_period ,update_period ,get_period
 from utils.db import get_db
 from schemas.period import PeriodCreate ,PeriodUpdate

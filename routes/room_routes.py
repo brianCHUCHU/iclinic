@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models.room import Room
+from models import Room
 from services.room_service import create_room ,update_room_name ,get_room
 from utils.db import get_db
 from schemas.room import RoomCreate ,RoomUpdate
