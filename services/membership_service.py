@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.membership import Membership
+from models import Membership
 from schemas.membership import MembershipCreate, MembershipUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext

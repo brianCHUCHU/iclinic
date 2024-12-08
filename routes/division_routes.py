@@ -3,15 +3,11 @@ from sqlalchemy.orm import Session
 from services.division_service import create_division, update_division, delete_division, get_division
 from utils.db import get_db
 from schemas.division import DivisionCreate
-from models.division import Division  # Assuming 'Division' is defined in models/division.py
 
 division_router = APIRouter()
 
 @division_router.post("/divisions", status_code=201)
 def create_division_endpoint(division: DivisionCreate, db: Session = Depends(get_db)):
-    # Ensure the division name is valid
-    if division.divname not in Division.valid_divnames:
-        raise HTTPException(status_code=400, detail="Invalid division name")
     
     result = create_division(db=db, division_data=division)
     return result  # Returns the result from the service layer, which includes division id

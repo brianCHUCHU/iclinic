@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.reservation import Reservation
+from models import Reservation
 from schemas.reservation import ReservationCreate ,ReservationUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext

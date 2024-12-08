@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.division import Division
+from models import Division
 from schemas.division import DivisionCreate
 
 def create_division(db: Session, division_data: DivisionCreate):

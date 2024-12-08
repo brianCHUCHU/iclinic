@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models.doctor import Doctor
+from models import Doctor
 from services.doctor_service import create_doctor ,update_doctor_name, get_hire, create_or_update_hire
 from utils.db import get_db
 from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreate

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from models.schedule import Schedule
+from models import Schedule
 from services.schedule_service import create_schedule ,update_schedule ,get_schedule
 from utils.db import get_db
 from schemas.schedule import ScheduleCreate ,ScheduleUpdate

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.clinic import Clinic
+from models import Clinic
 from schemas.clinic import ClinicCreate, ClinicUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext

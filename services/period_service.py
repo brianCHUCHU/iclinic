@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models.period import Period
+from models import Period
 from schemas.period import PeriodCreate ,PeriodUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext
