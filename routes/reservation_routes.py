@@ -26,11 +26,11 @@ def get_reservation_endpoint(
     applytime : str = None , 
     tid: str = None,
     status : str = None,
-    attendence : str = None
+    attendance : str = None
 ):
-    if not any([pid, sid, date, applytime, tid ,status, attendence]):
-        raise HTTPException(status_code=400, detail="At least one query parameter (pid, sid, date, applytime, tid, status, attendence) must be provided")
-    reservations = get_reservation(db=db, pid=pid, sid=sid, date=date, applytime=applytime, tid=tid, status=status, attendence=attendence)
+    if not any([pid, sid, date, applytime, tid ,status, attendance]):
+        raise HTTPException(status_code=400, detail="At least one query parameter (pid, sid, date, applytime, tid, status, attendance) must be provided")
+    reservations = get_reservation(db=db, pid=pid, sid=sid, date=date, applytime=applytime, tid=tid, status=status, attendance=attendance)
     if not reservations:
         raise HTTPException(status_code=404, detail="No reservations found")
     return {"reservation": reservations}

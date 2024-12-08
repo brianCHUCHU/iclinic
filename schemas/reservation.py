@@ -9,11 +9,11 @@ class ReservationBase(BaseModel):
     applytime : str
     tid : str
     status : str
-    attendence : bool
+    attendance : bool
 
 class ReservationCreate(ReservationBase):
     status : str = "P"
-    attendence : bool = True
+    attendance : bool = True
 
 class ReservationUpdate(ReservationBase):
     pid : str
@@ -22,4 +22,4 @@ class ReservationUpdate(ReservationBase):
     applytime : str
     tid : str = None
     status : str = None
-    attendence : bool = None
+    attendance : bool = None

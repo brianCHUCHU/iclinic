@@ -14,3 +14,5 @@ class Schedule(Base):
     division = relationship("Division", back_populates="schedules")
     period = relationship("Period", back_populates="schedules")
     doctor = relationship("Doctor", back_populates="schedules")
+    appointments = relationship("Appointment" ,cascade="all, delete, save-update")
+    reservations = relationship("Reservation" ,cascade="all, delete, save-update")

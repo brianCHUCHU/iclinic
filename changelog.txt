@@ -39,3 +39,5 @@ schedule period搞定，然後在period裡面有新發現的update寫法，頗�
         db.refresh(appointment)
         return {"message": "Appointment name updated successfully", "appointment": appointment}
     至於 get 的部分忘記為甚麼了，但總之就是得每一項都寫出來，可能有用迴圈的方法辣，但那個可以晚點有時間再改。
+    建立好relationship
+    然後把order改成int

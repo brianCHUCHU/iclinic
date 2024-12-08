@@ -47,7 +47,7 @@ def get_reservation(
         applytime : str, 
         tid: str = None,
         status : str = None,
-        attendence : str = None
+        attendance : str = None
     ):
     query = db.query(Reservation)
     if pid:
@@ -62,8 +62,8 @@ def get_reservation(
         query = query.filter(Reservation.tid == tid)
     if status:
         query = query.filter(Reservation.status == status)    
-    if attendence:
-        query = query.filter(Reservation.attendence == attendence)
+    if attendance:
+        query = query.filter(Reservation.attendance == attendance)
     reservations = query.all()
     if not reservations:
         raise HTTPException(status_code=404, detail="No Reservations found")

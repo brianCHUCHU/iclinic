@@ -6,20 +6,20 @@ class AppointmentBase(BaseModel):
     pid : str
     sid : str
     date : str
-    order : str
+    order : int
     applytime : str
     status : str
-    attendence : bool
+    attendance : bool
 
 class AppointmentCreate(AppointmentBase):
     status : str = "P"
-    attendence : bool = True
+    attendance : bool = False
 
 class AppointmentUpdate(AppointmentBase):
     pid : str
     sid : str 
     date : str
-    order : str
+    order : int
     applytime : str = None
     status : str = None
-    attendence : bool = None
+    attendance : bool = None

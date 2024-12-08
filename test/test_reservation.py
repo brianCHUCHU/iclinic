@@ -10,7 +10,7 @@ def test_create_reservation():
         "applytime" : "",
         "tid" : "",
         "status" : "",
-        "attendence" : None
+        "attendance" : None
     }
 
     response = client.post("/reservation", json=payload)

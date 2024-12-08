@@ -12,5 +12,6 @@ class Patient(Base):
 
     # 關聯 Membership
     # membership = relationship("Membership", back_populates="patient", uselist=False)
-
+    appointments = relationship("Appointment" ,cascade="all, delete, save-update")
+    reservations = relationship("Reservation" ,cascade="all, delete, save-update")
 

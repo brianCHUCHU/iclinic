@@ -9,6 +9,8 @@ from routes.patient_routes import patient_router
 from routes.treatment_routes import treatment_router
 from routes.period_routes import period_router
 from routes.schedule_routes import schedule_router
+from routes.appointment_routes import appointment_router
+from routes.reservation_routes import reservation_router
 from contextlib import asynccontextmanager
 
 app = FastAPI()
@@ -37,3 +39,5 @@ app.include_router(division_router)
 app.include_router(treatment_router)
 app.include_router(period_router)
 app.include_router(schedule_router)
+app.include_router(appointment_router)
+app.include_router(reservation_router)

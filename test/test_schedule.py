@@ -7,7 +7,7 @@ def test_create_schedule():
         "sid" : "0000000000",
         "divid" : "D01",
         "perid" : "0000000000",
-        "docid" : "D000000001",
+        "docid" : "T124488950",
     }
 
     response = client.post("/schedule", json=payload)
@@ -17,7 +17,7 @@ def test_create_schedule():
 def test_update_schedule():
     payload = {
         "sid" : "0000000000",
-        "docid" : "D000000001",
+        "docid" : "T124488950",
         "available" : False
     }
     response = client.put("/schedule", json=payload)

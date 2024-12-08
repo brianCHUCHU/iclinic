@@ -18,3 +18,4 @@ class Treatment(Base):
     doctor = relationship("Doctor", back_populates="treatments")
     division = relationship("Division", back_populates="treatments")
     clinic = relationship("Clinic", back_populates="treatments")
+    reservations = relationship("Reservation" ,cascade="all, delete, save-update")
