@@ -4,3 +4,38 @@ drawio放在src裡面 dictionary更改的部分用紫色標起來了 然後新�
 把上面提到的string改回bool，然後修正room和treatment，其中有補上散落在doc, div ,c中的relationships
 treatment忘記寫search了晚點補
 schedule period搞定，然後在period裡面有新發現的update寫法，頗方便的
+改的東西：
+1.  routes 的 import 如果是新寫的大概會是這個模式
+        from fastapi import APIRouter, HTTPException, Depends
+        from sqlalchemy.orm import Session
+        from models.period import Period
+        from services.period_service import create_period ,update_period ,get_period
+        from utils.db import get_db
+        from schemas.period import PeriodCreate ,PeriodUpdate
+2.  schemas 裡面的 available 應該都改成bool了
+3.  services 改比較多
+    首先是 header 我後來都用這個模式
+        from sqlalchemy.orm import Session
+        from models.appointment import Appointment
+        from schemas.appointment import AppointmentCreate ,AppointmentUpdate
+        from fastapi import HTTPException
+        from passlib.context import CryptContext
+        from sqlalchemy.orm.exc import NoResultFound
+    然後是update的部分從period開始更改的，用 model_dump() 來進行更改，就跟 create 的時候一樣，這樣就不需要每一項寫出來，但是因為用 model_dump() 的話 None 也會被一併拿去更新，所以在看到 None 得時候要跳過。
+        def update_appointment(db: Session, pid: str, sid: str, date: str, order: int, new: AppointmentUpdate):
+        appointment = db.query(Appointment).filter_by(
+            pid=pid,
+            sid=sid,
+            date=date,
+            order=order
+        ).first()
+        if not appointment:
+            raise HTTPException(status_code=404, detail="Appointment not found")
+        appointment_data = new.model_dump()
+        for key ,value in appointment_data.items():
+            if value is not None:
+                setattr(appointment ,key ,value)
+        db.commit()
+        db.refresh(appointment)
+        return {"message": "Appointment name updated successfully", "appointment": appointment}
+    至於 get 的部分忘記為甚麼了，但總之就是得每一項都寫出來，可能有用迴圈的方法辣，但那個可以晚點有時間再改。
