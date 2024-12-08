@@ -29,3 +29,7 @@ class ClinicUpdate(BaseModel):
     address: str = None
     available : bool = None
 
+class ClinicAuth(BaseModel):
+    acct_name: str
+    password: str
+

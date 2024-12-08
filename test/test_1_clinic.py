@@ -54,3 +54,11 @@ def test_get_clinic_by_invalid_id():
     assert response.status_code == 404
     assert response.json().get("detail") == "Clinic not found"
 
+def test_authenticate_clinic():
+    payload = {
+        "acct_name": "clinic_admin",
+        "password": "securepassword"
+    }
+    response = client.post("/clinics/authenticate", json=payload)
+    # assert response.json() == "Clinic authenticated successfully"
+    assert response.json().get('message') == "Clinic authenticated successfully"
