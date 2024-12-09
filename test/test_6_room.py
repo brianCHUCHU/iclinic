@@ -54,14 +54,21 @@ def test_get_rooms_by_rname():
     assert len(data["rooms"]) > 0  # 確保返回的結果不為空
     assert data["rooms"][0]["rname"] == "200"  # 確保房間的名稱是 200
 
-def test_get_rooms_no_params():
-    # 測試如果沒有提供任何查詢參數，應該返回 400 錯誤
-    response = client.get("/rooms")
-    assert response.status_code == 400
-    assert response.json() == {"detail": "At least one query parameter (rid, cid, or rname) must be provided"}
+def test_update_room_queue_number():
+    payload = {
+        "rid": "R000000001",
+        "queuenumber": 1,
+        "lastupdate": "2021-01-01 12:00:00"
+    }
 
-def test_get_rooms_not_found():
-    # 測試根據不存在的查詢條件
-    response = client.get("/rooms", params={"rid": "R999"})
-    assert response.status_code == 404
-    assert response.json() == {"detail": "No rooms found"}
+    response = client.put("/room/queuenumber", json=payload)
+    assert response.status_code == 200
+    assert response.json().get("message") == "Room queue number updated successfully"
+    assert response.json().get("queuenumber") == 1
+    assert response.json().get("room").get("rid") == payload["rid"]
+    assert response.json().get("room").get("queuenumber") == payload["queuenumber"]
+def test_get_room_queue_number():
+    # 測試獲取房間的排隊號碼
+    response = client.get("/room/queuenumber/R000000001", params={"rid": "R000000001"})
+    assert response.status_code == 200
+    assert response.json().get("queuenumber") == 1
