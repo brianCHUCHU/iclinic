@@ -54,6 +54,7 @@ def regexify() -> str:
     rest_chars = ''.join(random.choices(string.digits, k=9))
     return first_char + rest_chars
 
+'''
 def generate_patient(db: Session ,count : int = 1):
     generated_pids = set()
     patients = []
@@ -79,3 +80,4 @@ def generate_patient(db: Session ,count : int = 1):
     db.add_all(patients)
     db.commit()
     return patients
+'''

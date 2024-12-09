@@ -50,10 +50,11 @@ def test_update_patient():
 #     assert response.status_code == 200
 #     assert response.json()["message"] == "Patient deleted successfully"
 #     assert response.json()["patient"]["pid"] == pid
-
+'''
 def test_generate_patients():
     # 測試生成 5 條病患資料
     response = client.post("/patients/generate?count=5")
     assert response.status_code == 201
     assert len(response.json()["patients"]) == 5
     assert response.json()["message"] == "5 patients generated successfully"
+'''
