@@ -9,7 +9,8 @@ from contextlib import contextmanager
 from utils.db import SessionLocal
 import pytest
 
-patient_router = APIRouter()
+##pytest.skip(allow_module_level=True)
+
 @contextmanager
 def get_db_session():
     db = SessionLocal()
@@ -19,7 +20,7 @@ def get_db_session():
         db.close()
 
 
-##pytest.skip(allow_module_level=True)
+
 
 client = TestClient(app)
 fake = Faker()
