@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models import Appointment
-from schemas.appointment import AppointmentCreate ,AppointmentUpdate
+from schemas.appointment import AppointmentCreate, AppointmentUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound

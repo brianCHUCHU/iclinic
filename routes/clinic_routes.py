@@ -54,4 +54,3 @@ def authenticate_clinic_endpoint(auth: ClinicAuth, db: Session = Depends(get_db)
     if not sec.verify_password(password, clinic.acct_pw):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": "Clinic authenticated successfully", "clinic": clinic.cid}
-    
