@@ -9,7 +9,7 @@ def test_create_room_schedule():
         "/roomschedule/create",
         json={
             "rid":"R000000001",
-            "cid":"C001",
+            "cid":"C000000001",
             "sid" : "0000000000",
             "available": True
         }
@@ -22,7 +22,7 @@ def test_enable_room_schedule():
         "/roomschedule/enable",
         json={
             "rid":"R000000001",
-            "cid":"C001",
+            "cid":"C000000001",
             "sid" : "0000000000"
         }
     )
@@ -35,7 +35,7 @@ def test_disable_room_schedule():
         "/roomschedule/disable",
         json={
             "rid":"R000000001",
-            "cid":"C001",
+            "cid":"C000000001",
             "sid" : "0000000000"
         }
     )
@@ -49,7 +49,7 @@ def test_delete_room_schedule():
         "/roomschedule/delete",
         json={
             "rid": "R000000001",
-            "cid": "C001",
+            "cid": "C000000001",
             "sid": "0000000000"
         }
     )

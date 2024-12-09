@@ -7,7 +7,7 @@ def test_create_hire():
     payload = {
         "docid": "T124488950",
         'docname': 'Shirokami Fubuki',
-        "cid": "C001",
+        "cid": "C000000001",
         "divid": "D01",
         "startdate": "2022-01-01"
     }
@@ -20,7 +20,7 @@ def test_create_hire():
 def test_update_hire():
     payload = {
         "docid": "T124488950",
-        "cid": "C001",
+        "cid": "C000000001",
         "divid": "D01",
         "enddate": "2022-12-31"
     }
