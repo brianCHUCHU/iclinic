@@ -80,4 +80,4 @@ def generate_patient(db: Session ,count : int = 1):
     db.add_all(patients)
     db.commit()
     return patients
-'''
+

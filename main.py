@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from utils.db import test_db_connection
 # import all routers in routes/
 from routes.clinic_routes import clinic_router
@@ -15,22 +16,26 @@ from routes.membership_routes import membership_router
 from routes.roomschedule_routes import roomschedule_router
 from routes.clinicdivision_routes import clinicdivision_router
 from contextlib import asynccontextmanager
+import asyncio
+from frontend.base import frontend_router
+from fastapi.templating import Jinja2Templates
+from pathlib import Path
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Code for startup
-    test_db_connection()  # Ensure the database connection is successful
-    yield
-    # Code for shutdown (if needed)
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     # Code for startup
+#     test_db_connection()  # Ensure the database connection is successful
+#     yield
+#     # Code for shutdown (if needed)
 
-@app.get("/")
-def read_root():
-    return {"Hello": "FastAPI"}
 
 # 確保通過 uvicorn 啟動應用
 # 例如： uvicorn main:app --reload
+
+# templates = Jinja2Templates(directory=Path(__file__).parent / "frontend/templates")
 
 
 # Include routes for clinics
@@ -47,3 +52,4 @@ app.include_router(reservation_router)
 app.include_router(membership_router)
 app.include_router(roomschedule_router)
 app.include_router(clinicdivision_router)
+app.include_router(frontend_router)

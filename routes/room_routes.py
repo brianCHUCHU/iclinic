@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from services.room_service import create_room ,update_room_name ,get_room
+from services.room_service import create_room ,update_room_name ,get_room, get_room_queuenumber, update_room_queuenumber
 from utils.db import get_db
-from schemas.room import RoomCreate ,RoomUpdate
+from schemas.room import RoomCreate ,RoomUpdate, RoomUpdateQueue
 
 room_router = APIRouter()
 
@@ -30,4 +30,12 @@ def get_room_endpoint(
         raise HTTPException(status_code=404, detail="No rooms found")
     return {"rooms": rooms}
 
+@room_router.get("/room/queuenumber/{rid}")
+def get_room_queue_number(rid: str, db: Session = Depends(get_db)):
+    result = get_room_queuenumber(db=db, rid=rid)
+    return result
 
+@room_router.put("/room/queuenumber", status_code=200)
+def update_room_queue_number(room: RoomUpdateQueue, db: Session = Depends(get_db)):
+    result = update_room_queuenumber(db=db, queue_data=room)
+    return result
