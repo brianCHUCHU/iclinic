@@ -3,6 +3,10 @@ from models import Patient
 from schemas.patient import PatientCreate, PatientUpdate
 from fastapi import HTTPException
 from utils.id_check import id_validator
+from faker import Faker
+import random
+import string
+import re
 
 # 新增病患
 def create_patient(db: Session, patient_data: PatientCreate):
@@ -44,12 +48,34 @@ def delete_patient(db: Session, pid: str):
     db.commit()
     return patient
 
-def generate_patient(db: Session, pid: str):
-    if not id_check(patient_data.pid):
-        raise HTTPException(status_code=400, detail="Invalid patient id")
-    new_patient = Patient(**patient_data.model_dump())
-    db.add(new_patient)
-    db.commit()
-    db.refresh(new_patient)
-    return new_patient
+fake = Faker()
+def regexify() -> str:
+    first_char = random.choice(string.ascii_uppercase)
+    rest_chars = ''.join(random.choices(string.digits, k=9))
+    return first_char + rest_chars
+
+def generate_patient(db: Session ,count : int = 1):
+    generated_pids = set()
+    patients = []
+
+    while len(patients) < count:
+        pid = regexify(r'[A-Z0-9]{10}')
+        if pid in generated_pids:
+            continue
+
+        generated_pids.add(pid)
     
+        patient_data = {
+            "pid": pid,
+            "pname": fake.name(),
+            "birthdate": fake.date_of_birth(minimum_age=18, maximum_age=100),
+            "gender": fake.random_element(elements=["M", "F"]),
+            "status" : "G"
+        }
+
+    # 創建新的病患
+        new_patient = Patient(**patient_data)
+        patients.append(new_patient)
+    db.add_all(patients)
+    db.commit()
+    return patients
