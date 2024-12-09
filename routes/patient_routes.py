@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
-from services.patient_service import create_patient, get_patient, update_patient, delete_patient ,generate_patient
+from services.patient_service import create_patient, get_patient, update_patient, delete_patient
 from utils.db import get_db
 from schemas.patient import PatientCreate, PatientUpdate
 
@@ -39,3 +39,4 @@ def generate_patients_endpoint(count: int = 1, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Count must be greater than 0")
     generated_patients = generate_patient(db=db, count=count)
     return {"message": f"{count} patients generated successfully", "patients": generated_patients}
+
