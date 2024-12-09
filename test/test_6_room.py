@@ -5,7 +5,7 @@ client = TestClient(app)
 def test_create_room():
     payload = {
         "rid":"R000000001",
-        "cid":"C001",
+        "cid":"C000000001",
         "rname": "100"
     }
 
@@ -17,7 +17,7 @@ def test_create_room():
 def test_update_room():
     payload = {
         "rid" : "R000000001",
-        "cid":"C001",
+        "cid":"C000000001",
         "rname" : "200",
         "available" : False
     }
