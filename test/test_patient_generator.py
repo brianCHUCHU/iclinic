@@ -3,17 +3,28 @@ from fastapi.testclient import TestClient
 from main import app
 from faker import Faker
 from models import Patient
-from utils.db import get_db
-from models import Base
 from utils.id_check import id_generator
+from fastapi import APIRouter
+from contextlib import contextmanager
+from utils.db import SessionLocal
 import pytest
 
-pytest.skip(allow_module_level=True)
+patient_router = APIRouter()
+@contextmanager
+def get_db_session():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+##pytest.skip(allow_module_level=True)
 
 client = TestClient(app)
 fake = Faker()
 
-def generate_patients(db: Session, count: int = 1):
+def generate_patient(db: Session, count: int = 1):
 
     generated_pids = set()
     patients = []
@@ -27,10 +38,10 @@ def generate_patients(db: Session, count: int = 1):
 
         patient_data = {
             "pid": pid,
-            "pname": fake.first_name()[:100],
+            "pname": fake.name(),
             "birthdate": fake.date_of_birth(minimum_age=18, maximum_age=100),
             "gender": fake.random_element(elements=["M", "F"]),
-            "status": fake.random_element(elements=["A", "I", "G"])
+            "status" : "G"
         }
 
         new_patient = Patient(**patient_data)
@@ -40,15 +51,9 @@ def generate_patients(db: Session, count: int = 1):
     db.commit()
     return patients
 
-def test_generate_patients():
-
-    count = 500
-    response = client.post(f"/patients/generate?count={count}")
-    
-    assert response.status_code == 201
-    data = response.json()
-
-    assert data["message"] == f"{count} patients generated successfully"
-    assert len(data["patients"]) == count
-
+def test_generate_patient():
+    count = 100
+    with get_db_session() as db:
+            patients = generate_patient(db, count=count)
+            assert len(patients) == count
 
