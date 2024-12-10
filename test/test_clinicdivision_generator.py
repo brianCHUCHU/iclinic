@@ -8,7 +8,7 @@ import random
 import pytest
 from utils.id_check import id_generator
 import string
-from models import Clinic, Division
+from models import Clinic, Division ,Clinicdivision
 
 pytest.skip(allow_module_level=True)
 
@@ -24,11 +24,21 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(divids ,cids):
+def get_existings():
+    with SessionLocal() as db:
+        return {
+            (division.divid, division.cid)
+            for division in db.query(Clinicdivision).all()
+        }
 
-    divid = random.choice(divids)
-    cid = random.choice(cids)
+def generate_payload(divids ,cids ,existings):
 
+    while True:
+        divid = random.choice(divids)
+        cid = random.choice(cids)
+        if (divid ,cid) not in existings:
+            existings.add((divid, cid))
+            break
     return {
         "divid": divid,
         "cid": cid,
@@ -46,13 +56,14 @@ def test_create_rooms():
 
     count = 50
     divids ,cids = get_ids()
+    existings = get_existings()
 
     if not (cids and divids):
         raise ValueError("資料庫中沒有可用的 Clinics 資料，無法生成 ClinicDivision 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_payload(divids ,cids)
+        payload = generate_payload(divids ,cids ,existings)
         response = client.post("/clinicdivision/create", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")

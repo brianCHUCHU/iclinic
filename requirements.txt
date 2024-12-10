@@ -50,3 +50,4 @@ typing_extensions==4.12.2
 uvicorn==0.32.1
 wcwidth==0.2.6
 faker==33.1.0
+pandas

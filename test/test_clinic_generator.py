@@ -5,6 +5,8 @@ import random
 import pandas as pd
 import string
 import pytest
+import os
+import csv
 
 pytest.skip(allow_module_level=True)
 
@@ -39,25 +41,35 @@ def parse_address_simple(full_address):
 def generate_clinic_payload(row):
 
     city, district, address = parse_address_simple(row["地址"])
+    acct_name :str =  "".join(random.choices(string.ascii_lowercase, k=5))
+    acct_pw: str = "".join(random.choices(string.ascii_letters + string.digits, k=10))
     payload = {
         "cid": "C" + "".join(random.choices(string.digits, k=9)),
         "fee": random.choice([100, 150, 200, 250]),
         "queue_type": random.choice(["S", "I"]),
-        "acct_name": "".join(random.choices(string.ascii_lowercase, k=5)),
-        "acct_pw": "".join(random.choices(string.ascii_letters + string.digits, k=10)),
+        "acct_name": acct_name,
+        "acct_pw": acct_pw,
         "cname": row["醫事機構名稱"],
         "city": city,
         "district": district,
         "address": address,
         "available": True
     }
+    csv_file = "./src/clinic_accounts.csv"
+    file_exists = os.path.isfile(csv_file)
+    with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        if not file_exists:  # 如果檔案不存在，寫入標題行
+            writer.writerow(["acct_name", "acct_pw"])
+        writer.writerow([acct_name, acct_pw])  # 追加內容
+    
     return payload
 
 def test_clinic_generator():
     file_path = "./src/A21030000I-D21004-009.csv"
     df = pd.read_csv(file_path, encoding="utf-8")
 
-    limit = 100
+    limit = 3
     limited_df = df.head(limit)
 
     created_count = 0 

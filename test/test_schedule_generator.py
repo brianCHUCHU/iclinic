@@ -8,9 +8,9 @@ import random
 import pytest
 from utils.id_check import id_generator
 import string
-from models import Division ,Period ,Doctor
+from models import Period ,Doctor ,Hire, Schedule
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -24,39 +24,57 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(divids ,perids ,docids):
+def generate_payload(docids):
+    tried_docids = set()
+    with SessionLocal() as db:
+        while True:
+            if len(tried_docids) >= len(docids):
+                break
+            docid = random.choice(docids)
+            if docid in tried_docids:
+                continue
+            tried_docids.add(docid)
+            duals = [
+                (hire.divid, hire.cid)
+                for hire in db.query(Hire).filter(Hire.docid == docid).all()
+            ]
+            divid, cid = random.choice(duals)
+            if not (divid and cid):
+                continue
+            perids = [ period.perid for period in db.query(Period).filter(Period.cid == cid).all()]
+            perid = random.choice(perids)
+            if not perid:
+                continue
+            sid : str = "S" + "".join(random.choices(string.digits, k=9))
+            existing_schedule = db.query(Schedule).filter(
+                Schedule.docid == docid, Schedule.perid == perid, Schedule.divid == divid
+            ).first()
+            if not existing_schedule:
+                break
+        return {
+            "sid": sid,
+            "divid": divid,
+            "perid": perid,
+            "docid": docid
+        }   
 
-    sid = f"{random.randint(0, 9999999999):010d}"
-    divid = random.choice(divids)
-    perid =random.choice(perids)
-    docid =random.choice(docids)
-
-    return {
-        "sid": sid,
-        "divid": divid,
-        "perid": perid,
-        "docid": docid
-    }
-
-def get_existing_ids():
+def get_ids():
 
     with SessionLocal() as db:
-        divids = [division.divid for division in db.query(Division).all()]
-        perids = [period.perid for period in db.query(Period).all()]
         docids = [doctor.docid for doctor in db.query(Doctor).all()]
-    return divids ,perids ,docids
+    return docids
 
 def test_create_schedules():
 
     count = 50
-    divids ,perids ,docids = get_existing_ids()
+    docids = get_ids()
 
-    if not (divids and perids and docids):
+    if not docids:
         raise ValueError("資料庫中沒有可用的資料，無法生成 Schedule 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_payload(divids ,perids ,docids)
+        payload = generate_payload(docids)
         response = client.post("/schedule", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")
