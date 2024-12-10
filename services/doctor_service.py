@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from models import Doctor, Hire
-from models import Clinic, Division Clinicdivision
-from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreated
+from models import Clinic, Division, Clinicdivision
+from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreate
 from fastapi import HTTPException
 from utils.id_check import id_validator
 
