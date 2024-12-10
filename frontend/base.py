@@ -14,40 +14,96 @@ def patient_console():
         <style>
             body { font-family: Arial, sans-serif; padding: 20px; }
             #output { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+            #records { border: 1px solid #ccc; padding: 10px; margin-top: 10px; display: none; }
             #command { width: 100%; padding: 10px; }
+            .record-item { cursor: pointer; margin: 5px 0; padding: 5px; border: 1px solid #ddd; }
+            .record-item:hover { background-color: #f0f0f0; }
+            #back-btn { margin-top: 10px; display: none; }
         </style>
     </head>
     <body>
         <h1>Patient Console</h1>
-        <div id="output">Welcome to the Patient Console!<br>Enter to Select Function:<br><br>Type "schedule" to Schedule Appointment/Reservation (for Treatment)<br>Type "record" to View/Cancel/Update Your Scheduled Appointment/Reservation</div>
+        <div id="output">
+            Welcome to the Patient Console!<br>
+            Enter to Select Function:<br><br>
+            Type "schedule" to Schedule an Appointment/Reservation (for Treatment)<br>
+            Type "pending" to View/Cancel/Update Your Scheduled Appointments/Reservations<br>
+            Type "record" to View Your Past Appointments/Reservations
+        </div>
+        <div id="records"></div>
+        <button id="back-btn">Back to Console</button>
         <input id="command" type="text" placeholder="Type your command here and press Enter...">
         <script>
             const output = document.getElementById("output");
+            const recordsDiv = document.getElementById("records");
             const commandInput = document.getElementById("command");
+            const backBtn = document.getElementById("back-btn");
 
-            commandInput.addEventListener("keypress", async function(event) {
+            let selectedRecord = null; // Store selected record for operation
+
+            commandInput.addEventListener("keypress", async function (event) {
                 if (event.key === "Enter") {
                     const command = commandInput.value.trim();
                     if (!command) return;
                     output.innerHTML += `<div>> ${command}</div>`;
                     commandInput.value = "";
 
-                    // 發送命令到後端
-                    const response = await fetch("/execute/patient", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ command })
-                    });
+                    if (selectedRecord) {
+                        // Operate on the selected record
+                        const response = await fetch(`/records/${selectedRecord.id}/operate`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ command }),
+                        });
+                        const result = await response.json();
+                        output.innerHTML += `<div>${result.message}</div>`;
+                        selectedRecord = null; // Reset the selection
+                        recordsDiv.style.display = "none";
+                        backBtn.style.display = "block";
+                    } else {
+                        // Send command to patient console
+                        const response = await fetch("/execute/patient", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ command }),
+                        });
 
-                    const result = await response.json();
-                    output.innerHTML += `<div>${result.message}</div>`;
-                    output.scrollTop = output.scrollHeight;
+                        const result = await response.json();
+                        output.innerHTML += `<div>${result.message}</div>`;
+                        output.scrollTop = output.scrollHeight;
+
+                        // Display records if available
+                        if (result.records) {
+                            recordsDiv.style.display = "block";
+                            backBtn.style.display = "block";
+                            recordsDiv.innerHTML = "<h3>Your Records:</h3>";
+                            result.records.forEach((record) => {
+                                const recordDiv = document.createElement("div");
+                                recordDiv.className = "record-item";
+                                recordDiv.textContent = `${record.date}: ${record.details} (${record.type})`;
+                                recordDiv.addEventListener("click", () => {
+                                    selectedRecord = record;
+                                    output.innerHTML += `<div>You selected: ${record.details}</div>`;
+                                    recordsDiv.style.display = "none";
+                                });
+                                recordsDiv.appendChild(recordDiv);
+                            });
+                        }
+                    }
                 }
+            });
+
+            backBtn.addEventListener("click", () => {
+                recordsDiv.style.display = "none";
+                backBtn.style.display = "none";
+                output.innerHTML += "<div>Back to console.</div>";
+                selectedRecord = null;
             });
         </script>
     </body>
     </html>
     """)
+
 
 @frontend_router.get("/clinic_console", response_class=HTMLResponse)
 def clinic_console():

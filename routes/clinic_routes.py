@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from services.clinic_service import create_clinic, update_clinic, delete_clinic, get_clinic_by_id, get_clinic_by_acct_name
 from utils.db import get_db
@@ -43,7 +43,7 @@ def get_clinic_by_id_endpoint(cid: str, db: Session = Depends(get_db)):
 
 # authenticate clinic
 @clinic_router.post("/clinics/authenticate")
-def authenticate_clinic_endpoint(auth: ClinicAuth, db: Session = Depends(get_db)):
+def authenticate_clinic_endpoint(auth: ClinicAuth, request: Request, db: Session = Depends(get_db)):
     # get clinic password hash
     acct_name = auth.acct_name
     password = auth.password
@@ -53,4 +53,11 @@ def authenticate_clinic_endpoint(auth: ClinicAuth, db: Session = Depends(get_db)
     # check password
     if not sec.verify_password(password, clinic.acct_pw):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+        # 将用户信息存入会话
+
+    session = request.session
+    session['user_id'] = clinic.cid
+    session['welcome_state'] = True
+    session['manage_state'] = False
+    session['appointment_state'] = False
     return {"message": "Clinic authenticated successfully", "clinic": clinic.cid}

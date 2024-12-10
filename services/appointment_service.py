@@ -67,3 +67,13 @@ def get_appointment(
     if not appointments:
         raise HTTPException(status_code=404, detail="No Appointments found")
     return appointments
+
+def view_past_appointments(db: Session, pid: str):
+    query = db.query(Appointment).filter(Appointment.pid == pid).filter(Appointment.date < datetime.now())
+    appointments = query.all()
+    return appointments
+
+def view_future_appointments(db: Session, pid: str):
+    query = db.query(Appointment).filter(Appointment.pid == pid).filter(Appointment.date > datetime.now())
+    appointments = query.all()
+    return appointments

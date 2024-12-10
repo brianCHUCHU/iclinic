@@ -1,6 +1,10 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
+# import middleware for session handling
+from starlette.middleware.sessions import SessionMiddleware
 from utils.db import test_db_connection
+import os
+from secrets import token_hex   
 # import all routers in routes/
 from routes.clinic_routes import clinic_router
 from routes.division_routes import division_router 
@@ -25,6 +29,11 @@ from pathlib import Path
 from pydantic import BaseModel
 
 app = FastAPI()
+
+# Middleware for session handling
+# secret_key = os.getenv("SECRET_KEY", token_hex(32))
+secret_key = os.getenv("SECRET_KEY", 'default_secret_key')
+app.add_middleware(SessionMiddleware, secret_key=secret_key)
 
 # @asynccontextmanager
 # async def lifespan(app: FastAPI):
