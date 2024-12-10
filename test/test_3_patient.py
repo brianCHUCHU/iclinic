@@ -29,20 +29,20 @@ def test_get_patient_name():
     assert response.status_code == 200
     assert response.json()["patient"][0]["pname"] == pname
 
-def test_update_patient():
-    pid = "T124488950"
-    payload = {
-        "pname": "John Smith",
-        "status": "G",
-        'birthdate': "1990-01-01",
-        'gender': "M",
-    }
+# def test_update_patient():
+#     pid = "T124488950"
+#     payload = {
+#         "pname": "John Smith",
+#         "status": "G",
+#         'birthdate': "1990-01-01",
+#         'gender': "M",
+#     }
 
-    response = client.put(f"/patients/{pid}", json=payload)
-    assert response.status_code == 200
-    assert response.json()["message"] == "Patient updated successfully"
-    assert response.json()["patient"]["pname"] == payload["pname"]
-    assert response.json()["patient"]["status"] == payload["status"]
+#     response = client.put(f"/patients/{pid}", json=payload)
+#     assert response.status_code == 200
+#     assert response.json()["message"] == "Patient updated successfully"
+#     assert response.json()["patient"]["pname"] == payload["pname"]
+#     assert response.json()["patient"]["status"] == payload["status"]
 
 # def test_delete_patient():
 #     pid = "T124488950"

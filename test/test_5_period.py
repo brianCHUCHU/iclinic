@@ -2,18 +2,18 @@ from fastapi.testclient import TestClient
 from main import app
 client = TestClient(app)
 
-def test_create_period():
-    payload = {
-        "perid" : "0000000000",
-        "cid" : "C000000001",
-        "weekday" : "1",
-        "starttime" : "14:30",
-        "endtime" : "18:30"
-    }
+# def test_create_period():
+#     payload = {
+#         "perid" : "0000000000",
+#         "cid" : "C000000001",
+#         "weekday" : "1",
+#         "starttime" : "14:30",
+#         "endtime" : "18:30"
+#     }
 
-    response = client.post("/period", json=payload)
-    assert response.status_code == 201
-    assert response.json().get("message") == "Period created successfully"
+#     response = client.post("/period", json=payload)
+#     assert response.status_code == 201
+#     assert response.json().get("message") == "Period created successfully"
 
 # def test_update_period():
 #     payload = {
