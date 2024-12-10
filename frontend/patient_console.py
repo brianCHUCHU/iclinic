@@ -60,7 +60,7 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
             return {"message": "Back to main menu."}
         else:
             return {"message": f"Command `{command}` not valid in the current state."}
-    elif session['state'] == 'create':
+    # elif session['state'] == 'create':
         
 
     else:
