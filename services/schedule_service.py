@@ -23,7 +23,7 @@ def create_schedule(db: Session, schedule_data: ScheduleCreate):
     db.add(new_schedule)
     db.commit()
     db.refresh(new_schedule)
-    return {"message": "Schedule created successfully","Schedule":new_schedule}
+    return {"message": "Schedule created successfully","schedule":new_schedule}
 
 def enable_schedule(db: Session, data: ScheduleUpdate):
     schedule = db.query(Schedule).filter_by(docid=data.docid, divid=data.divid, perid=data.perid).first()

@@ -4,10 +4,10 @@ from utils.db import get_db
 from sqlalchemy.orm import Session
 import json
 from services.doctor_service import create_or_update_hire
-from services.clinicdivision_service import create_clinic_division
+from services.clinicdivision_service import create_clinic_division, enable_clinic_division, disable_clinic_division
 from services.schedule_service import create_schedule, enable_schedule, disable_schedule
 from schemas.doctor import DoctorAndHireCreate
-from schemas.clinicdivision import ClinicDivisionCreate
+from schemas.clinicdivision import ClinicDivisionCreate, ClinicDivisionUpdate
 from schemas.schedule import ScheduleCreate, ScheduleUpdate
 from models import Hire, Period, Clinicdivision
 
@@ -45,19 +45,6 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         else:
             return {"message": f"Unknown command: {command}"}
     
-    # Appointment state
-    elif current_state == 'appointment':
-        if command == 'enable':
-            return {"message": "enable schedule"}
-        elif command == 'disable':
-            return {"message": "disable schedule"}
-        elif command == 'update':
-            return {"message": "update schedule"}
-        elif command == 'back':
-            session['state'] = 'welcome'
-            return {"message": "back to main menu"}
-        else:
-            return {"message": f"Unknown appointment command: {command}"}
     
     # Manage state
     elif current_state == 'manage':
@@ -72,7 +59,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": "add room"}
         elif command == 'division':
             session['state'] = 'division'
-            return {"message": "add division"}
+            return {"message": "Enter division command: add, enable, disable"}
         elif command == 'info':
             session['state'] = 'info'
             return {"message": "update clinic information"}
@@ -119,6 +106,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
         elif command == 'disable':
             session['state'] = 'disable_schedule'
+            return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
         elif command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
@@ -132,7 +120,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         else:
             command = json.loads(command)
             if command.get("docid") and command.get("divid") and command.get("perid"):
-                if db.query(Clinicdivision).filter_by(divid=command['divid'], cid=session['user_id']).first():
+                if not db.query(Clinicdivision).filter_by(divid=command['divid'], cid=session['user_id']).first():
                     return {"message": "Division not found"}
                 if not db.query(Hire).filter_by(docid=command['docid'], cid=session['user_id']).first():
                     return {"message": "Doctor not found"}
@@ -141,19 +129,23 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
                 
                 if current_state == 'add_schedule':
                     result = create_schedule(db=db, schedule_data=ScheduleCreate(**command))
-                    if not result:
-                        return {"message": "Schedule not added, {}".format(result.json())}
-                    return {"message": "Schedule added successfully", "schedule": result}
+                    try:
+                        return {"message": "Schedule added successfully", "schedule": result['schedule']}
+                    except:
+                        return {"message": "Schedule not added, {}, try again".format(result)}
                 elif current_state == 'enable_schedule':
                     result = enable_schedule(db=db, data=ScheduleUpdate(**command))
-                    if not result:
-                        return {"message": "Schedule not enabled, {}".format(result.json())}
-                    return {"message": "Schedule enabled successfully", "schedule": result}
+                    try:
+                        return {"message": "Schedule enabled successfully", "schedule": result['schedule']}
+                    except:
+                        return {"message": "Schedule not enabled, {}, try again".format(result)}
                 elif current_state == 'disable_schedule':
                     result = disable_schedule(db=db, data=ScheduleUpdate(**command))
-                    if not result:
-                        return {"message": "Schedule not disabled, {}".format(result.json())}
-                    return {"message": "Schedule disabled successfully", "schedule": result}
+                    try:
+                        return {"message": "Schedule disabled successfully", "schedule": result['schedule']}
+                    except:
+                        return {"message": "Schedule not disabled, {}, try again".format(result)}
+                    
             else:
                 return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
 
@@ -175,24 +167,46 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         if command == 'add':
             session['state'] = 'add_division'
             return {"message": "Please enter division id"}
-        elif command == 'remove':
-            session['state'] = 'remove_division'
-            return {"message": "remove division"}
+        elif command == 'enable':
+            session['state'] = 'enable_division'
+            return {"message": "Please enter division id"}
+        elif command == 'disable':
+            session['state'] = 'disable_division'
+            return {"message": "Please enter division id"}
         elif command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
         else:
             return {"message": f"Unknown division command: {command}"}
 
-    elif current_state == 'add_division':
+    elif current_state in ['add_division', 'enable_division', 'disable_division']:
         if command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
         else:
-            result = create_clinic_division(db=db, clinic_division=ClinicDivisionCreate(clinic_id=session['user_id'], division_id=command))
-            if not result:
-                return {"message": "Division not added, {}".format(result.json())}
-            return {"message": "division added successfully", "division": result}
+            if current_state == 'add_division':
+                result = create_clinic_division(db=db, clinic_division_data=ClinicDivisionCreate(cid=session['user_id'], divid=command))
+                try:
+                    return {"message": "division created successfully", "division": result['clinic_division']}
+                except:
+                    return {"message": "Division not created {}, please check if division exists".format(result)}
+            elif current_state == 'enable_division':
+                result = enable_clinic_division(db=db, clinic_division_data=ClinicDivisionUpdate(cid=session['user_id'], divid=command))
+                try:
+                    return {"message": "division enabled successfully", "division": result['clinic_division']}
+                except:
+                    return {"message": "Division not enabled {}, please check if division exists".format(result)}
+                
+            elif current_state == 'disable_division':
+                result = disable_clinic_division(db=db, clinic_division_data=ClinicDivisionUpdate(cid=session['user_id'], divid=command))
+                try:
+                    return {"message": "division disabled successfully", "division": result['clinic_division']}
+                except:
+                    return {"message": "Division not disabled {}, please check if division exists".format(result)}
+            else:
+                return {"message": "Please enter division id"}
+            
+
     # Info state
     elif current_state == 'info':
         if command == 'update':
