@@ -10,13 +10,14 @@ class RoomBase(BaseModel):
     rname : str
     available : bool
 
-class RoomCreate(RoomBase):
-    rname : str = None
+class RoomCreate(BaseModel):
+    rname : str
+    cid : str
     available : bool = True
 
-class RoomUpdate(RoomBase):
-    rname : str = None
-    available : bool = None
+class RoomUpdate(BaseModel):
+    rid: str
+    rname: Optional[str]
 
 class RoomUpdateQueue(BaseModel):
     rid: str
