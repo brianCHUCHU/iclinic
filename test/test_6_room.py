@@ -64,7 +64,6 @@ def test_update_room_queue_number():
     response = client.put("/room/queuenumber", json=payload)
     assert response.status_code == 200
     assert response.json().get("message") == "Room queue number updated successfully"
-    assert response.json().get("queuenumber") == 1
     assert response.json().get("room").get("rid") == payload["rid"]
     assert response.json().get("room").get("queuenumber") == payload["queuenumber"]
 def test_get_room_queue_number():

@@ -17,8 +17,12 @@ class PatientUpdate(BaseModel):
     gender: str = None
     status: str = None
 
-class MembershipCreate(BaseModel):
+class MembershipCreate(PatientBase):
     pid: str
+<<<<<<< HEAD
+    status: str = 'M'
+=======
+>>>>>>> afdfb08053d764e00433128a353975515f103e97
     acct_pw: str
     email: str
 

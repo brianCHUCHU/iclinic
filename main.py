@@ -18,6 +18,8 @@ from routes.clinicdivision_routes import clinicdivision_router
 from contextlib import asynccontextmanager
 import asyncio
 from frontend.base import frontend_router
+from frontend.patient_console import patient_console_router
+from frontend.clinic_console import clinic_console_router
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from pydantic import BaseModel
@@ -53,3 +55,5 @@ app.include_router(membership_router)
 app.include_router(roomschedule_router)
 app.include_router(clinicdivision_router)
 app.include_router(frontend_router)
+app.include_router(patient_console_router)
+app.include_router(clinic_console_router)

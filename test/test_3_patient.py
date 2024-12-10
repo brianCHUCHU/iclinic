@@ -9,7 +9,7 @@ def test_create_patient():
         "pname": "John Doe",
         "birthdate": "1990-01-01",
         "gender": "M",
-        "status": "A"
+        "status": "G"
     }
 
     response = client.post("/patients", json=payload)
@@ -33,7 +33,7 @@ def test_update_patient():
     pid = "T124488950"
     payload = {
         "pname": "John Smith",
-        "status": "I",
+        "status": "G",
         'birthdate': "1990-01-01",
         'gender': "M",
     }
