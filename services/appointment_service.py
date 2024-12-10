@@ -4,6 +4,7 @@ from schemas.appointment import AppointmentCreate, AppointmentUpdate
 from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound
+from datetime import datetime
 
 def create_appointment(db: Session, appointment_data: AppointmentCreate):
     existing_appointment = db.query(Appointment).filter_by(

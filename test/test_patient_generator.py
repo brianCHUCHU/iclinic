@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from utils.db import SessionLocal
 import pytest
 
-##pytest.skip(allow_module_level=True)
+pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():

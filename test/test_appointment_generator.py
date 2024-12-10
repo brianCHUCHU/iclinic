@@ -69,7 +69,7 @@ def get_ids():
 
 def test_create_rooms():
 
-    count = 50
+    count = 50000
     pids ,sids = get_ids()
     existings = get_existings()
     latest = get_latest()

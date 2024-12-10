@@ -2,6 +2,7 @@ from fastapi.responses import HTMLResponse
 from fastapi import Request, APIRouter, Depends
 from utils.db import get_db
 from sqlalchemy.orm import Session
+from services.appointment_service import *
 
 patient_console_router = APIRouter()
 
@@ -21,25 +22,23 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
 
             if command == "record":
                 appointments = view_past_appointments(db=db, pid=user_id)
-                reservations = view_past_reservations(db=db, pid=user_id)
             elif command == "pending":
                 appointments = view_future_appointments(db=db, pid=user_id)
-                reservations = view_future_reservations(db=db, pid=user_id)
 
-            # 合并 appointments 和 reservations
-            combined_records = [
-                {**appt.to_dict(), "type": "appointment"} for appt in appointments
-            ] + [
-                {**res.to_dict(), "type": "reservation"} for res in reservations
-            ]
+            records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
 
-            return {
+            response_data = {
                 "message": f"Here are your {command} records.",
-                "records": combined_records,
+                "records": [
+                    {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
+                    for record in records
+                ],
             }
+            return response_data
         elif command == "schedule":
             session['state'] = 'schedule'
             return {"message": "Here is your schedule."}
+
         elif command == "exit":
             session.clear()
             return {"message": "Goodbye!"}

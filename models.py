@@ -185,6 +185,13 @@ class Appointment(Base):
     patient = relationship('Patient')
     schedule = relationship('Schedule')
 
+    def to_dict(self):
+        base_dict = super().to_dict()  # 轉換基礎欄位
+        # 加入外鍵表的相關資料
+        base_dict["patient_name"] = self.patient.pname if self.patient else None
+        base_dict["schedule_info"] = self.schedule.to_dict() if self.schedule else None
+        return base_dict
+
 
 class Reservation(Base):
     __tablename__ = 'reservation'
