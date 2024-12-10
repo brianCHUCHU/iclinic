@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from models import Clinicdivision
 from schemas.clinicdivision import ClinicDivisionCreate, ClinicDivisionUpdate
+from fastapi import HTTPException
+
 
 def create_clinic_division(db: Session, clinic_division_data: ClinicDivisionCreate):
     existing_clinic_division = db.query(Clinicdivision).filter_by(divid=clinic_division_data.divid, cid=clinic_division_data.cid).first()
