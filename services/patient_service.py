@@ -48,36 +48,3 @@ def delete_patient(db: Session, pid: str):
     db.commit()
     return patient
 
-fake = Faker()
-def regexify() -> str:
-    first_char = random.choice(string.ascii_uppercase)
-    rest_chars = ''.join(random.choices(string.digits, k=9))
-    return first_char + rest_chars
-
-'''
-def generate_patient(db: Session ,count : int = 1):
-    generated_pids = set()
-    patients = []
-
-    while len(patients) < count:
-        pid = regexify(r'[A-Z0-9]{10}')
-        if pid in generated_pids:
-            continue
-
-        generated_pids.add(pid)
-    
-        patient_data = {
-            "pid": pid,
-            "pname": fake.name(),
-            "birthdate": fake.date_of_birth(minimum_age=18, maximum_age=100),
-            "gender": fake.random_element(elements=["M", "F"]),
-            "status" : "G"
-        }
-
-    # 創建新的病患
-        new_patient = Patient(**patient_data)
-        patients.append(new_patient)
-    db.add_all(patients)
-    db.commit()
-    return patients
-
