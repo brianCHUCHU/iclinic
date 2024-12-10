@@ -30,13 +30,21 @@ def generate_period_payload(docids ,divids ,cids):
     docid = random.choice(docids)
     divid =random.choice(divids)
     cid =random.choice(cids)
+    tname = f"{random.randint(0, 9999999999):010d}"
 
     return {
         "tid": tid,
         "docid": docid,
         "divid": divid,
-        "cid": cid
+        "cid": cid,
+        "tname": tname
     }
+
+# def get_existing_ids():
+#     with SessionLocal() as db:
+#         docname =[doctor.docname for doctor in db.query(Doctor).all()]
+#         divname =[division.divname for division in db.query(Division).all()]
+#         return docname ,divname
 
 def get_existing_ids():
 
