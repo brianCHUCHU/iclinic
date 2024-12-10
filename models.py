@@ -5,6 +5,12 @@ from sqlalchemy.orm import relationship, declarative_base
 Base = declarative_base()
 metadata = Base.metadata
 
+# let base have to_dict method for models to inherit
+def to_dict(self):
+    return {c.name: getattr(self, c.name) if getattr(self, c.name) is not None else "" for c in self.__table__.columns}
+
+Base.to_dict = to_dict
+
 
 class Clinic(Base):
     __tablename__ = 'clinic'
