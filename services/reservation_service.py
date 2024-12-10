@@ -67,3 +67,11 @@ def get_reservation(
     if not reservations:
         raise HTTPException(status_code=404, detail="No Reservations found")
     return reservations
+
+def view_past_reservations(db: Session, pid: str):
+    reservations = db.query(Reservation).filter(Reservation.pid == pid, Reservation.date < datetime.now().date()).all()
+    return reservations
+
+def view_future_reservations(db: Session, pid: str):
+    reservations = db.query(Reservation).filter(Reservation.pid == pid, Reservation.date > datetime.now().date()).all()
+    return reservations

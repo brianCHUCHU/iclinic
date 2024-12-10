@@ -27,6 +27,24 @@ def update_schedule(db: Session, sid: str, new: ScheduleUpdate):
     db.refresh(schedule)
     return {"message": "Schedule updated successfully", "schedule": schedule}
 
+def enable_schedule(db: Session, sid: str):
+    schedule = db.query(Schedule).filter_by(sid=sid).first()
+    if not schedule:
+        raise HTTPException(status_code=404, detail="Schedule not found")
+    schedule.available = True
+    db.commit()
+    db.refresh(schedule)
+    return {"message": "Schedule enabled successfully", "schedule": schedule}
+
+def disable_schedule(db: Session, sid: str):
+    schedule = db.query(Schedule).filter_by(sid=sid).first()
+    if not schedule:
+        raise HTTPException(status_code=404, detail="Schedule not found")
+    schedule.available = False
+    db.commit()
+    db.refresh(schedule)
+    return {"message": "Schedule disabled successfully", "schedule": schedule}
+
 def get_schedule(
         db: Session, 
         sid: str = None, 

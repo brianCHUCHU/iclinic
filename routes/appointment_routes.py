@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from models import Appointment
-from services.appointment_service import create_appointment ,update_appointment ,get_appointment
+from services.appointment_service import create_appointment ,update_appointment ,get_appointment, view_past_appointments, view_future_appointments
 from utils.db import get_db
 from schemas.appointment import AppointmentCreate ,AppointmentUpdate
 
@@ -40,3 +40,15 @@ def get_appointment_endpoint(
     if not appointments:
         raise HTTPException(status_code=404, detail="No appointments found")
     return {"appointment": appointments}
+
+@appointment_router.get("/{pid}/record")
+def view_past_appointments_endpoint(pid: str, db: Session = Depends(get_db)):
+    appointments = view_past_appointments(db=db, pid=pid)
+    reservations = view_past_reservations(db=db, pid=pid)
+    return {"appointments": appointments, "reservations": reservations}
+
+@appointment_router.get("/{pid}/pending")
+def view_future_appointments_endpoint(pid: str, db: Session = Depends(get_db)):
+    appointments = view_future_appointments(db=db, pid=pid)
+    reservations = view_future_reservations(db=db, pid=pid)
+    return {"appointments": appointments, "reservations": reservations}
