@@ -32,11 +32,17 @@ def generate_payload(pids):
             break
     acct_pw = "".join(random.choices(string.ascii_letters + string.digits, k=10))
     email = f"user_{random.randint(1000, 9999)}@example.com"
+    pname = fake.name()
+    birthdate = fake.date_of_birth(minimum_age=18, maximum_age=100)
+    gender = fake.random_element(elements=["M", "F"])
 
     return {
         "pid": pid,
         "acct_pw": acct_pw,
         "email": email,
+        "pname": pname,
+        "birthdate": birthdate.isoformat(),
+        "gender": gender
     }
 
 def get_existing_ids():
@@ -45,7 +51,7 @@ def get_existing_ids():
         pids = [patient.pid for patient in db.query(Patient).all()]
     return pids
 
-def test_create_treatments():
+def test_create_memberships():
 
     count = 50
     pids = get_existing_ids()
