@@ -44,12 +44,13 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
                 records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
 
                 response_data = {
-                    "message": f"Here are your {command} records.",
+                    "message": f"Here are your {command} records. If you want to cancel, please enter in json format, columns includes \"sid, date\"",
                     "records": [
                         {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
                         for record in records
                     ],
                 }
+                session['state'] = 'cancel'
                 return response_data
         
         elif command == "create":
@@ -70,19 +71,38 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
             return {"message": "Back to main menu."}
         else:
             return {"message": f"Command `{command}` not valid in the current state."}
-    elif session['state'] == 'pending':
-        if command == "cancel":
-            command = data.get("command")
-            try:
-                command = json.loads(command)
-            except:
-                return {"message": "Please enter in json form, columns includes \"{sid, sid, date}\""}
-            return {"message": "Cancelled"}
-        elif command == "back":
+    elif session['state'] == 'cancel':
+        if command == "back":
             session['state'] = 'welcome'
             return {"message": "Back to main menu."}
         else:
-            return {"message": f"Command `{command}` not valid in the current state."}
+            try:
+                command = json.loads(command)
+            except json.JSONDecodeError:
+                return {"message": "Invalid JSON format. Please provide valid input."}
+            
+            try:
+                command['date'] = datetime.datetime.strptime(command['date'], '%Y-%m-%d')
+            except ValueError:
+                return {"message": "Invalid date format. Please use 'YYYY-MM-DD'."}
+
+            try:
+                appointment = db.query(Appointment).filter(
+                    Appointment.sid == command['sid'],
+                    Appointment.date == command['date'],
+                    Appointment.pid == session['user_id']
+                ).first()
+                if not appointment:
+                    return {"message": "No such appointment found. Please try again with a valid appointment ID."}
+                appointment.status = "C"
+                db.commit()
+                db.refresh(appointment)
+                return {"message": "Appointment cancelled successfully."}
+            except:
+                db.rollback()
+                return {"message": "Please enter in json form, columns includes \"{sid, date}\""}
+            return {"message": "Cancelled"}
+
     elif session['state'] == 'create':
         if command == "back":
             session['state'] = 'welcome'
@@ -141,7 +161,6 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
             return {"message": f"Database error: {str(e)}"}
         except Exception as e:
             return {"message": f"Unexpected error: {str(e)}"}
-        
 
     else:
         return {"message": f"Command `{command}` not valid in the current state."}
