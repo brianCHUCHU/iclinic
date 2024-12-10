@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from services.clinic_service import create_clinic, update_clinic, delete_clinic, get_clinic_by_id, get_clinic_by_acct_name
 from utils.db import get_db
-from schemas.clinic import ClinicCreate, ClinicAuth
+from schemas.clinic import ClinicCreate, ClinicAuth, ClinicUpdate
 import utils.security as sec
 
 clinic_router = APIRouter()
@@ -16,7 +16,7 @@ def create_clinic_endpoint(clinic: ClinicCreate, db: Session = Depends(get_db)):
 
 # update clinic
 @clinic_router.put("/clinics/{cid}")
-def update_clinic_endpoint(cid: str, clinic: ClinicCreate, db: Session = Depends(get_db)):
+def update_clinic_endpoint(cid: str, clinic: ClinicUpdate, db: Session = Depends(get_db)):
     if clinic.acct_pw:
         clinic.acct_pw = sec.hash_password(clinic.acct_pw)
     result = update_clinic(db=db, cid=cid, clinic_update=clinic)

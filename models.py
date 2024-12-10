@@ -1,7 +1,6 @@
 # coding: utf-8
 from sqlalchemy import Boolean, CHAR, CheckConstraint, Column, Date, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Numeric, String, Time
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -46,7 +45,7 @@ class Patient(Base):
     __tablename__ = 'patient'
     __table_args__ = (
         CheckConstraint("gender = ANY (ARRAY['M'::bpchar, 'F'::bpchar])"),
-        CheckConstraint("status = ANY (ARRAY['A'::bpchar, 'I'::bpchar, 'G'::bpchar])")
+        CheckConstraint("status = ANY (ARRAY['M::bpchar, 'G'::bpchar])")
     )
 
     pid = Column(String(10), primary_key=True)
@@ -60,7 +59,7 @@ class Membership(Base):
     __tablename__ = 'membership'
 
     pid = Column(ForeignKey('patient.pid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True)
-    acctpw = Column(String(100), nullable=False)
+    acct_pw = Column(String(100), nullable=False)
     email = Column(String(30), nullable=False, unique=True)
 
     patient = relationship('Patient')
@@ -192,7 +191,7 @@ class Reservation(Base):
     status = Column(String(1), nullable=False)
     attendance = Column(Boolean, nullable=False)
 
-    patient = relationship('Patient')
+    # patient = relationship('Patient')
     schedule = relationship('Schedule')
     treatment = relationship('Treatment')
 

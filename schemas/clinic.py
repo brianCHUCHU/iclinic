@@ -14,7 +14,6 @@ class ClinicBase(BaseModel):
     available : bool
 
 class ClinicCreate(ClinicBase):
-    cid: str
     acct_pw: str
     available : bool = True
 
