@@ -61,26 +61,42 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
         else:
             return {"message": f"Command `{command}` not valid in the current state."}
     elif session['state'] == 'create':
-        try:
-            sid, date, applytime, status, attendance = command.split(',')
-            appointment_data = {
-                "pid": user_id,
-                "sid": sid.strip(),
-                "date": date.strip(),
-                "applytime": applytime.strip(),
-                "status": status.strip(),
-                "attendance": attendance.strip().lower() == "true"
-            }   
-            response = requests.post("http://127.0.0.1:8000/appointments", json=appointment_data)
-            if response.status_code == 201:  # 處理成功創建的回應
-                    session['state'] = 'welcome'
-                    return {"message": f"Appointment created successfully: {response.json()}"}
-            else:  # 處理失敗的回應
-                return {"message": f"Failed to create appointment: {response.json().get('detail', 'Unknown error')}"}
-        except Exception as e:  # 異常處理：解析或請求失敗
-            return {"message": f"Error parsing input: {str(e)}"}
+        
 
     else:
         return {"message": f"Command `{command}` not valid in the current state."}
+
+
+@patient_console_router.post("/execute/patient")
+async def execute_patient_command(request: Request, db: Session = Depends(get_db)):
+    session = request.session
+    user_id = session.get('user_id')
+    if not user_id:
+        return {"message": "User not logged in. Please log in first."}
+
+    data = await request.json()
+    command = data.get("command", "")
+
+    if command == "create":
+        # 創建新的 appointment
+        sid = data.get("sid")
+        date = data.get("date")
+        order = data.get("order")
+        try:
+            response = requests.post("http://127.0.0.1:8000/appointments", json={
+                "pid": user_id,
+                "sid": sid,
+                "date": date,
+                "order": order
+            })
+            if response.status_code == 201:
+                return {"message": "Appointment created successfully."}
+            else:
+                return {"message": f"Failed to create appointment: {response.json().get('detail', 'Unknown error')}"}
+        except Exception as e:
+            return {"message": f"Error: {str(e)}"}
+
+    # 處理其他指令（例如 record, pending）
+    return {"message": f"Command {command} not recognized."}
 
     
