@@ -86,27 +86,53 @@ def get_hire(db: Session, docid: str = None, cid: str = None, divid: str = None,
         return query.first()  # 返回單筆資料
     return query.all()  # 返回多筆資料
 
-# create doctor if doctor not exists, then create hire, if hire exists, update hire
+from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException
+
 def create_or_update_hire(db: Session, data: DoctorAndHireCreate):
     if not id_validator(data.docid):
         raise HTTPException(status_code=400, detail="Invalid doctor id")
-    # Step 1: Ensure the doctor exists using get_doctor
-    doctor = get_doctor(db, docid=data.docid)
-    if not doctor:
-        if not data.docname:
-            raise HTTPException(status_code=400, detail="Doctor name is required")
-        result = create_doctor(db, DoctorCreate(docid=data.docid, docname=data.docname))
 
-    # check if cid and divid in clinicdivision
-    clinicdivision = db.query(Clinicdivision).filter_by(cid=data.cid, divid=data.divid).first()
-    if not clinicdivision:
-        raise HTTPException(status_code=404, detail="Clinicdivision not found")
-
-    # Step 2: try update hire if hire exists
     try:
-        return update_hire(db, docid=data.docid, cid=data.cid, divid=data.divid, hire_update=HireUpdate(startdate=data.startdate, enddate=data.enddate))
-    except HTTPException:
-        pass
+        # 开启事务
+        with db.begin():
+            # Step 1: Ensure the doctor exists
+            doctor = get_doctor(db, docid=data.docid)
+            if not doctor:
+                if not data.docname:
+                    raise HTTPException(status_code=400, detail="Doctor name is required")
+                create_doctor(db, DoctorCreate(docid=data.docid, docname=data.docname))
 
-    # Step 3: Create a new hire
-    return create_hire(db, HireCreate(docid=data.docid, cid=data.cid, divid=data.divid, startdate=data.startdate, enddate=data.enddate))
+            # Step 2: Check if cid and divid exist in Clinicdivision
+            clinicdivision = db.query(Clinicdivision).filter_by(cid=data.cid, divid=data.divid).first()
+            if not clinicdivision:
+                raise HTTPException(status_code=404, detail="Clinicdivision not found")
+
+            # Step 3: Try updating the hire if it exists
+            existing_hire = db.query(Hire).filter_by(docid=data.docid, cid=data.cid, divid=data.divid).first()
+            if existing_hire:
+                return update_hire(
+                    db,
+                    docid=data.docid,
+                    cid=data.cid,
+                    divid=data.divid,
+                    hire_update=HireUpdate(startdate=data.startdate, enddate=data.enddate)
+                )
+
+            # Step 4: Create a new hire if no existing hire
+            return create_hire(
+                db,
+                HireCreate(docid=data.docid, cid=data.cid, divid=data.divid, startdate=data.startdate, enddate=data.enddate)
+            )
+
+    except HTTPException as e:
+        # 如果是 HTTPException，直接抛出
+        raise e
+    except SQLAlchemyError as e:
+        # 捕获 SQLAlchemy 异常并回滚事务
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+    except Exception as e:
+        # 捕获其他异常
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
