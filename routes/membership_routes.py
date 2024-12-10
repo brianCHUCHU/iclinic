@@ -10,15 +10,15 @@ membership_router = APIRouter()
 @membership_router.post("/memberships", status_code=201)
 def create_membership_endpoint(membership: MembershipCreate, db: Session = Depends(get_db)):
     # hash the password
-    membership.acctpw = sec.hash_password(membership.acctpw)
+    membership.acct_pw = sec.hash_password(membership.acct_pw)
     result = create_membership(db=db, membership_data=membership)
     return result
 
 # update membership
 @membership_router.put("/memberships/{pid}")
 def update_membership_endpoint(pid: str, membership: MembershipUpdate, db: Session = Depends(get_db)):
-    if membership.acctpw:
-        membership.acctpw = sec.hash_password(membership.acctpw)
+    if membership.acct_pw:
+        membership.acct_pw = sec.hash_password(membership.acct_pw)
     result = update_membership(db=db, membership_update=membership)
     if not result:
         raise HTTPException(status_code=404, detail="Membership not found")
@@ -49,6 +49,6 @@ def authenticate_membership_endpoint(auth: MembershipAuth, db: Session = Depends
     result = get_membership(db=db, pid=auth.pid)
     if not result:
         raise HTTPException(status_code=404, detail="Membership not found")
-    if not sec.verify_password(auth.acctpw, result.acctpw):
+    if not sec.verify_password(auth.acct_pw, result.acct_pw):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"message": "Authentication successful", "membership": result.pid}
