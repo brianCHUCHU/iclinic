@@ -56,7 +56,7 @@ def test_create_treatments():
     created_count = 0
     for _ in range(count):
         payload = generate_payload(pids)
-        response = client.post("/membership", json=payload)
+        response = client.post("/memberships", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")
 
