@@ -1,8 +1,7 @@
 from sqlalchemy.orm import Session
 from models import Doctor, Hire
-from models import Clinic
-from models import Division
-from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreate
+from models import Clinic, Division Clinicdivision
+from schemas.doctor import DoctorCreate ,DoctorUpdate, HireCreate, HireUpdate, DoctorAndHireCreated
 from fastapi import HTTPException
 from utils.id_check import id_validator
 
@@ -97,6 +96,11 @@ def create_or_update_hire(db: Session, data: DoctorAndHireCreate):
         if not data.docname:
             raise HTTPException(status_code=400, detail="Doctor name is required")
         result = create_doctor(db, DoctorCreate(docid=data.docid, docname=data.docname))
+
+    # check if cid and divid in clinicdivision
+    clinicdivision = db.query(Clinicdivision).filter_by(cid=data.cid, divid=data.divid).first()
+    if not clinicdivision:
+        raise HTTPException(status_code=404, detail="Clinicdivision not found")
 
     # Step 2: try update hire if hire exists
     try:
