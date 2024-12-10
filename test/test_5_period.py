@@ -5,7 +5,7 @@ client = TestClient(app)
 def test_create_period():
     payload = {
         "perid" : "0000000000",
-        "cid" : "C001",
+        "cid" : "C000000001",
         "weekday" : "1",
         "starttime" : "14:30",
         "endtime" : "18:30"

@@ -11,7 +11,6 @@ class TreatmentBase(BaseModel):
     available : bool
 
 class TreatmentCreate(TreatmentBase):
-    tname: str = None
     available : bool = True
 
 class TreatmentUpdate(TreatmentBase):

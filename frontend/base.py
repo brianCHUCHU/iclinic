@@ -284,3 +284,94 @@ async def login_or_create_page():
     </body>
     </html>
     """)
+<<<<<<< HEAD
+=======
+
+@frontend_router.get("/login/patient", response_class=HTMLResponse)
+async def login_patient_page():
+    return HTMLResponse("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Patient Login</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .input { padding: 10px; margin: 10px; font-size: 16px; }
+            .button { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 16px; }
+        </style>
+    </head>
+    <body>
+        <h1>Patient Login</h1>
+        <form id="patient-login-form">
+            <input class="input" id="pid" type="text" placeholder="Enter your Patient ID" required>
+            <input class="input" id="acct_pw" type="password" placeholder="Enter your password" required>
+            <button type="button" class="button" onclick="loginPatient()">Login</button>
+        </form>
+        <script>
+            async function loginPatient() {
+                const pid = document.getElementById('pid').value;
+                const acct_pw = document.getElementById('acct_pw').value;
+
+                const response = await fetch('/memberships/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pid, acct_pw })
+                });
+
+                if (response.ok) {
+                    window.location.href = "/patient_console";
+                } else {
+                    alert("Invalid credentials!");
+                }
+            }
+        </script>
+    </body>
+    </html>
+    """)
+
+@frontend_router.get("/login/clinic", response_class=HTMLResponse)
+async def login_clinic_page():
+    return HTMLResponse("""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Clinic Login</title>
+        <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            .input { padding: 10px; margin: 10px; font-size: 16px; }
+            .button { padding: 10px 20px; margin: 10px; cursor: pointer; font-size: 16px; }
+        </style>
+    </head>
+    <body>
+        <h1>Clinic Login</h1>
+        <form id="clinic-login-form">
+            <input class="input" id="acct_name" type="text" placeholder="Enter your Clinic Account Name" required>
+            <input class="input" id="password" type="password" placeholder="Enter your password" required>
+            <button type="button" class="button" onclick="loginClinic()">Login</button>
+        </form>
+        <script>
+            async function loginClinic() {
+                const acct_name = document.getElementById('acct_name').value;
+                const password = document.getElementById('password').value;
+
+                const response = await fetch('/clinics/authenticate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ acct_name, password })
+                });
+
+                if (response.ok) {
+                    window.location.href = "/clinic_console";
+                } else {
+                    alert("Invalid credentials!");
+                }
+            }
+        </script>
+    </body>
+    </html>
+    """)
+>>>>>>> afdfb08053d764e00433128a353975515f103e97

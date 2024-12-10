@@ -9,7 +9,7 @@ def test_create_client_division():
         "/clinicdivision/create",
         json={
             "divid":"D01",
-            "cid":"C001",
+            "cid":"C000000001",
             "available": True
         }
     )
@@ -21,7 +21,7 @@ def test_enable_clinic_division():
         "/clinicdivision/enable",
         json={
             "divid":"D01",
-            "cid":"C001"
+            "cid":"C000000001"
         }
     )
     assert response.status_code == 200
@@ -33,7 +33,7 @@ def test_disable_clinic_division():
         "/clinicdivision/disable",
         json={
             "divid":"D01",
-            "cid":"C001"
+            "cid":"C000000001"
         }
     )
     assert response.status_code == 200
@@ -46,7 +46,7 @@ def test_delete_clinic_division():
         "/clinicdivision/delete",
         json={
             "divid": "D01",
-            "cid": "C001"
+            "cid": "C000000001"
         }
     )
     assert response.status_code == 200

@@ -10,10 +10,14 @@ membership_router = APIRouter()
 @membership_router.post("/memberships", status_code=201)
 def create_membership_endpoint(membership: MembershipCreate, db: Session = Depends(get_db)):
     # hash the password
+<<<<<<< HEAD
     try:
         membership.acct_pw = sec.hash_password(membership.acct_pw)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+=======
+    membership.acct_pw = sec.hash_password(membership.acct_pw)
+>>>>>>> afdfb08053d764e00433128a353975515f103e97
     result = create_membership(db=db, membership_data=membership)
     return {"message": "Membership created successfully", "membership": result.pid}
 
