@@ -24,47 +24,35 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(pids):
+def generate_member(db: Session, count: int = 1):
 
-    existing_pids = []
-    pid = 0
-    while True:
-        pid = random.choice(pids ,existing_pids)
-        if pid not in existing_pids:  # 確保 pid 唯一
-            existing_pids.append(pid)
-            break
-    acctpw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10))
-    email = f"user_{random.randint(1000, 9999)}@example.com"
+    generated_pids = set()
+    patients = []
 
-    return {
-        "pid": pid,
-        "acctpw": acctpw,
-        "email": email
-    }
-
-
-def get_existing_ids():
-
-    with SessionLocal() as db:
-        pids = [patient.pid for patient in db.query(Patient).all()]
-    return pids
-
-def test_create_memberships():
-
-    count = 50
-    pids = get_existing_ids()
-
-    if not pids:
-        raise ValueError("資料庫中沒有可用的資料，無法生成 Treatment 資料！")
-
-    created_count = 0
     for _ in range(count):
-        payload = generate_payload(pids)
-        response = client.post("/memberships", json=payload)
-        print(f"Payload: {payload}")
-        print(f"Response: {response.status_code} - {response.json()}")
+        while True:
+            pid = id_generator()
+            if pid not in generated_pids:
+                generated_pids.add(pid)
+                break
+        acctpw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10))
+        email = f"user_{random.randint(1000, 9999)}@example.com"
 
-        assert response.status_code == 201, f"Failed at payload: {payload}"
-        created_count += 1
+        patient_data = {
+            "pid": pid,
+            "acctpw": acctpw,
+            "email": email
+        }
 
-    print(f"成功新增 {created_count} 筆 Membership 資料！")
+        new_patient = Patient(**patient_data)
+        patients.append(new_patient)
+
+    db.add_all(patients)
+    db.commit()
+    return patients
+
+def test_generate_member():
+    count = 100
+    with get_db_session() as db:
+            patients = generate_member(db, count=count)
+            assert len(patients) == count
