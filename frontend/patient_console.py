@@ -30,9 +30,9 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
 
             # 合并 appointments 和 reservations
             combined_records = [
-                {**appt.model_dump(), "type": "appointment"} for appt in appointments
+                {**appt.to_dict(), "type": "appointment"} for appt in appointments
             ] + [
-                {**res.model_dump(), "type": "reservation"} for res in reservations
+                {**res.to_dict(), "type": "reservation"} for res in reservations
             ]
 
             return {
