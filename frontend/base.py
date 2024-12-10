@@ -26,9 +26,9 @@ def patient_console():
         <div id="output">
             Welcome to the Patient Console!<br>
             Enter to Select Function:<br><br>
-            Type "schedule" to Schedule an Appointment/Reservation (for Treatment)<br>
-            Type "pending" to View/Cancel/Update Your Scheduled Appointments/Reservations<br>
-            Type "record" to View Your Past Appointments/Reservations
+            Type "create" to Create an Appointment (for Treatment)<br>
+            Type "pending" to View/Cancel/Update Your Scheduled Appointments<br>
+            Type "record" to View Your Past Appointments
         </div>
         <div id="records"></div>
         <button id="back-btn">Back to Console</button>
@@ -75,29 +75,18 @@ def patient_console():
                         // Display records if available
                         if (result.records) {
                             recordsDiv.style.display = "block";
-                            backBtn.style.display = "block";
                             recordsDiv.innerHTML = "<h3>Your Records:</h3>";
                             result.records.forEach((record) => {
                                 const recordDiv = document.createElement("div");
-                                recordDiv.className = "record-item";
-                                recordDiv.textContent = `${record.date}: ${record.details} (${record.type})`;
-                                recordDiv.addEventListener("click", () => {
-                                    selectedRecord = record;
-                                    output.innerHTML += `<div>You selected: ${record.details}</div>`;
-                                    recordsDiv.style.display = "none";
-                                });
-                                recordsDiv.appendChild(recordDiv);
+                                let recordDetails = Object.entries(record)
+                                    .map(([key, value]) => `${key}: ${value}`)
+                                    .join("<br>");
+                            recordDiv.innerHTML = `${recordDetails}<hr>`;
+                                recordsDiv.appendChild(recordDiv);  
                             });
                         }
                     }
                 }
-            });
-
-            backBtn.addEventListener("click", () => {
-                recordsDiv.style.display = "none";
-                backBtn.style.display = "none";
-                output.innerHTML += "<div>Back to console.</div>";
-                selectedRecord = null;
             });
         </script>
     </body>
