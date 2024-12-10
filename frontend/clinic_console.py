@@ -7,10 +7,14 @@ from services.doctor_service import create_or_update_hire
 from services.clinicdivision_service import create_clinic_division, enable_clinic_division, disable_clinic_division
 from services.schedule_service import create_schedule, enable_schedule, disable_schedule
 from services.room_service import create_room
+from services.period_service import create_period
+from services.roomschedule_service import create_room_schedule
 from schemas.doctor import DoctorAndHireCreate
 from schemas.clinicdivision import ClinicDivisionCreate, ClinicDivisionUpdate
 from schemas.room import RoomCreate
+from schemas.period import PeriodCreate
 from schemas.schedule import ScheduleCreate, ScheduleUpdate
+from schemas.roomschedule import RoomScheduleCreate, RoomScheduleUpdate
 from models import Hire, Period, Clinicdivision, Room, Roomschedule
 
 clinic_console_router = APIRouter()
@@ -71,6 +75,9 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": f"Unknown appointment command: {command}"}
 
     elif current_state == 'room_queue':
+        if command == 'back':
+            session['state'] = 'welcome'
+            return {"message": "back to main menu"}
         try:
             result = db.query(Room).filter_by(rid=command, cid=session['user_id']).first()
             # update queue number and last update
@@ -104,7 +111,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": "back to main menu"}
         elif command == 'room_schedule':
             session['state'] = 'room_schedule'
-            return {"message": "room schedule"}
+            return {"message": "Enter room schedule command: add, enable, disable"}
         elif command == 'period':
             session['state'] = 'period'
             return {"message": "Enter period command: add, enable, disable"}
@@ -300,19 +307,77 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
 
-    # Room schedule state
+        # Room schedule state
     elif current_state == 'room_schedule':
         if command == 'add':
-            return {"message": "add room schedule"}
-        elif command == 'remove':
-            return {"message": "remove room schedule"}
+            session['state'] = 'add_room_schedule'
+            return {"message": "Please enter room schedule details in JSON form, fields include {sid, rid}."}
+        elif command == 'enable':
+            session['state'] = 'enable_room_schedule'
+            return {"message": "Please provide schedule id."}
+        elif command == 'disable':
+            session['state'] = 'disable_room_schedule'
+            return {"message": "Please provide schedule id."}
         elif command == 'back':
             session['state'] = 'manage'
-            return {"message": "back to manage menu"}
+            return {"message": "Back to manage menu."}
+        else:
+            return {"message": f"Unknown room schedule command: {command}"}
+
+
+    # Add room schedule
+    elif current_state == 'add_room_schedule':
+        try:
+            try:
+                command = json.loads(command)
+            except:
+                return {"message": "Please enter in JSON form, fields include {sid, rid}."}
+
+
+            # Check for required fields
+            if not command.get("sid") or not command.get("rid"):
+                return {"message": "Missing required fields: {sid, rid}. Please provide valid data."}
+
+
+            # Add room schedule logic
+            command['cid'] = session['user_id']
+            room_schedule = create_room_schedule(db=db, room_schedule_data=RoomScheduleCreate(**command))
+            session['state'] = 'room_schedule'
+            return {"message": "Room schedule added successfully.", "result": room_schedule}
+
+
+        except Exception as e:
+            return {"message": f"Failed to add room schedule: {str(e)}"}
+
+
+    # Enable or disable room schedule
+    elif current_state in ['enable_room_schedule', 'disable_room_schedule']:
+        if command == 'back':
+            session['state'] = 'manage'
+            return {"message": "Back to manage menu."}
+
+
+        try:
+
+            # Enable/disable room schedule logic
+            sid = command
+            schedule = db.query(Roomschedule).filter_by(sid=sid, cid=session['user_id']).first()
+            if not schedule:
+                return {"message": "Room schedule not found."}
+            schedule.available = True if current_state == 'enable_room_schedule' else False
+            db.commit()
+            db.refresh(schedule)
+            session['state'] = 'room_schedule'
+            return {"message": f"Room schedule {current_state.split('_')[0]}d successfully.", "result": schedule}
+
+
+        except Exception as e:
+            return {"message": f"Failed to {current_state.split('_')[0]} room schedule: {str(e)}"}
     
     elif current_state == 'period':
         if command == 'add':
-            return {"message": "Please enter in json form, columns includes \"{starttime, endtime}\""}
+            session['state'] = 'add_period'
+            return {"message": "Please enter in json form, columns includes \"{weekday, starttime, endtime}\""}
         elif command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
@@ -336,16 +401,14 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
                 return {"message": f"{current_state} successfully.", "result": period}
             except Exception as e:
                 return {"message": f"Failed to {current_state} period: {str(e)}"}
-    elif current_state == 'add':
+    elif current_state == 'add_period':
         if command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
         try:
             command = json.loads(command)
-            period = Period(cid=session['user_id'], starttime=command['starttime'], endtime=command['endtime'])
-            db.add(period)
-            db.commit()
-            db.refresh(period)
+            period = PeriodCreate(cid=session['user_id'], weekday=command['weekday'], starttime=command['starttime'], endtime=command['endtime'], available=True)
+            period = create_period(db, period)
             return {"message": "Period added successfully.", "result": period}
         except Exception as e:
             return {"message": f"Failed to add period: {str(e)}"}
