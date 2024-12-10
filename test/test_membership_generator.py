@@ -8,9 +8,11 @@ import random
 import pytest
 from utils.id_check import id_generator
 import string
-from models import Patient
+from models import Patient, Membership
+import csv
+import os
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -28,13 +30,25 @@ def generate_payload(pids):
 
     while True:
         pid = id_generator()
-        if pid not in pids:  # 確保 pid 唯一
+        if pid not in pids:
             break
     acct_pw = "".join(random.choices(string.ascii_letters + string.digits, k=10))
-    email = f"user_{random.randint(1000, 9999)}@example.com"
+    with SessionLocal() as db:
+        while True:
+            email = f"user_{random.randint(0, 9999999999):010d}@example.com"
+            if email not in set(email[0] for email in db.query(Membership.email).all()):
+                break
     pname = fake.name()
     birthdate = fake.date_of_birth(minimum_age=18, maximum_age=100)
     gender = fake.random_element(elements=["M", "F"])
+
+    csv_file = "./src/membership_accounts.csv"
+    file_exists = os.path.isfile(csv_file)
+    with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["pid", "acct_pw"])
+        writer.writerow([pid, acct_pw])
 
     return {
         "pid": pid,
