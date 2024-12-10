@@ -43,7 +43,7 @@ def get_existing_ids():
     with SessionLocal() as db:
         docids = [doctor.docid for doctor in db.query(Doctor).all()]
         divids = [division.divid for division in db.query(Division).all()]
-        cids = [clinic.cids for clinic in db.query(Clinic).all()]
+        cids = [clinic.cid for clinic in db.query(Clinic).all()]
     return docids, divids ,cids
 
 def test_create_periods():
