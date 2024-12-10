@@ -24,7 +24,7 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_period_payload(docids ,divids ,cids):
+def generate_payload(docids ,divids ,cids):
 
     tid = f"{random.randint(0, 9999999999):010d}"
     docid = random.choice(docids)
@@ -40,7 +40,7 @@ def generate_period_payload(docids ,divids ,cids):
         "tname": tname
     }
 
-# def get_existing_ids():
+# def get_existing_names():
 #     with SessionLocal() as db:
 #         docname =[doctor.docname for doctor in db.query(Doctor).all()]
 #         divname =[division.divname for division in db.query(Division).all()]
@@ -54,7 +54,7 @@ def get_existing_ids():
         cids = [clinic.cid for clinic in db.query(Clinic).all()]
     return docids, divids ,cids
 
-def test_create_periods():
+def test_create_treatments():
 
     count = 50
     docids ,divids ,cids = get_existing_ids()
@@ -64,7 +64,7 @@ def test_create_periods():
 
     created_count = 0
     for _ in range(count):
-        payload = generate_period_payload(docids ,divids ,cids)
+        payload = generate_payload(docids ,divids ,cids)
         response = client.post("/treatment", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")
