@@ -47,3 +47,4 @@ def delete_patient(db: Session, pid: str):
     db.delete(patient)
     db.commit()
     return patient
+

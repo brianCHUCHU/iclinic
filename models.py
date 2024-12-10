@@ -1,7 +1,7 @@
 # coding: utf-8
 from sqlalchemy import Boolean, CHAR, CheckConstraint, Column, Date, DateTime, ForeignKey, ForeignKeyConstraint, Integer, Numeric, String, Time
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 metadata = Base.metadata
@@ -16,7 +16,7 @@ class Clinic(Base):
     cid = Column(String(10), primary_key=True)
     fee = Column(Integer, nullable=False)
     queue_type = Column(CHAR(1), nullable=False)
-    acct_name = Column(String(30), nullable=False)
+    acct_name = Column(String(30), nullable=False, unique=True)
     acct_pw = Column(String(100), nullable=False)
     cname = Column(String(30), nullable=False)
     city = Column(String(50), nullable=False)
@@ -50,7 +50,7 @@ class Patient(Base):
     )
 
     pid = Column(String(10), primary_key=True)
-    pname = Column(String(10), nullable=False)
+    pname = Column(String(100), nullable=False)
     birthdate = Column(Date, nullable=False)
     gender = Column(CHAR(1), nullable=False)
     status = Column(CHAR(1), nullable=False)
@@ -65,12 +65,15 @@ class Membership(Base):
 
     patient = relationship('Patient')
 
+
 class Clinicdivision(Base):
     __tablename__ = 'clinicdivision'
 
     divid = Column(ForeignKey('division.divid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     cid = Column(ForeignKey('clinic.cid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     available = Column(Boolean, nullable=False)
+    queuenumber = Column(Integer)
+    lastupdate = Column(DateTime)
 
     clinic = relationship('Clinic')
     division = relationship('Division')
@@ -113,6 +116,8 @@ class Room(Base):
     cid = Column(ForeignKey('clinic.cid', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
     rname = Column(String(5), nullable=False)
     available = Column(Boolean, nullable=False)
+    queuenumber = Column(Integer)
+    lastupdate = Column(DateTime)
 
     clinic = relationship('Clinic')
 
