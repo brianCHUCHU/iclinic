@@ -12,11 +12,9 @@ def create_membership(db: Session, membership_data: MembershipCreate):
     return new_member
 
 # 查詢會員 (根據 pid 或帳號名稱)
-def get_membership(db: Session, pid: str = None, acctname: str = None):
+def get_membership(db: Session, pid: str = None):
     if pid:
         return db.query(Membership).filter(Membership.pid == pid).first()
-    if acctname:
-        return db.query(Membership).filter(Membership.acctname == acctname).first()
     return None
 
 # 更新會員資料
