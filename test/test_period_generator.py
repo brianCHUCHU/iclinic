@@ -9,6 +9,7 @@ import random
 import pytest
 from utils.id_check import id_generator
 from datetime import time, timedelta
+import string
 
 pytest.skip(allow_module_level=True)
 
@@ -26,7 +27,7 @@ client = TestClient(app)
 
 def generate_payload(cids):
 
-    perid = f"{random.randint(0, 9999999999):010d}"
+    perid: str = "P" + "".join(random.choices(string.digits, k=9))
     cid = random.choice(cids)
     weekday = str(random.randint(1, 7))
     start_hour = random.randint(6, 17) 
