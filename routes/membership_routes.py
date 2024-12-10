@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 from services.membership_service import create_membership, update_membership, delete_membership, get_membership
 from utils.db import get_db
@@ -46,12 +46,21 @@ def get_membership_endpoint(pid: str, db: Session = Depends(get_db)):
 
     return result
 
-# authenticate membership
 @membership_router.post("/memberships/authenticate")
-def authenticate_membership_endpoint(auth: MembershipAuth, db: Session = Depends(get_db)):
+def authenticate_membership_endpoint(auth: MembershipAuth, request: Request, db: Session = Depends(get_db)):
+    # 查找用户
     result = get_membership(db=db, pid=auth.pid)
     if not result:
         raise HTTPException(status_code=404, detail="Membership not found")
     if not sec.verify_password(auth.acct_pw, result.acct_pw):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # 将用户信息存入会话
+    session = request.session
+    session['user_id'] = result.pid
+    session['welcome_state'] = True
+    session['record_state'] = False  # 初始化状态
+    session['schedule_state'] = False  # 初始化状态
+    session['pending_state'] = False
+    
     return {"message": "Authentication successful", "membership": result.pid}

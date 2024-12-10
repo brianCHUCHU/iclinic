@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from models import Reservation
-from services.reservation_service import create_reservation ,update_reservation ,get_reservation
+from services.reservation_service import create_reservation ,update_reservation ,get_reservation, view_past_reservations, view_future_reservations
 from utils.db import get_db
 from schemas.reservation import ReservationCreate ,ReservationUpdate
 
@@ -34,3 +34,4 @@ def get_reservation_endpoint(
     if not reservations:
         raise HTTPException(status_code=404, detail="No reservations found")
     return {"reservation": reservations}
+
