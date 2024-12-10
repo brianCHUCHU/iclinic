@@ -316,7 +316,6 @@ async def login_or_create_page():
             }
         } else {
             const data = {
-                cid: document.getElementById('create-cid').value,
                 cname: document.getElementById('create-cname').value,
                 acct_name: document.getElementById('create-acct_name').value,
                 acct_pw: document.getElementById('create-acct_pw').value,

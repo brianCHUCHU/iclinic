@@ -5,30 +5,28 @@ from fastapi import HTTPException
 from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound
 
+def random_schedule_id(db: Session):
+    import random
+    import string
+    # start with C and followed by 9 random numbers (digits only)
+    sid = "S" + ''.join(random.choices(string.digits, k=9))
+    while db.query(Schedule).filter(Schedule.sid == sid).first():
+        sid = "S" + ''.join(random.choices(string.digits, k=9))
+    return sid
+
 def create_schedule(db: Session, schedule_data: ScheduleCreate):
-    existing_schedule = db.query(Schedule).filter_by(sid=schedule_data.sid).first()
-    if existing_schedule:
-        return HTTPException(status_code=400, detail="Schedule already exists")
+    sid = random_schedule_id(db)
     schedule_dict = schedule_data.model_dump()
     new_schedule = Schedule(**schedule_dict)
+    new_schedule.sid = sid
 
     db.add(new_schedule)
     db.commit()
     db.refresh(new_schedule)
     return {"message": "Schedule created successfully","Schedule":new_schedule}
 
-def update_schedule(db: Session, sid: str, new: ScheduleUpdate):
-    schedule = db.query(Schedule).filter_by(sid=sid).first()
-    if not schedule:
-        raise HTTPException(status_code=404, detail="Schedule not found")
-    if new.available is not None:
-        schedule.available = new.available
-    db.commit()
-    db.refresh(schedule)
-    return {"message": "Schedule updated successfully", "schedule": schedule}
-
-def enable_schedule(db: Session, sid: str):
-    schedule = db.query(Schedule).filter_by(sid=sid).first()
+def enable_schedule(db: Session, data: ScheduleUpdate):
+    schedule = db.query(Schedule).filter_by(docid=data.docid, divid=data.divid, perid=data.perid).first()
     if not schedule:
         raise HTTPException(status_code=404, detail="Schedule not found")
     schedule.available = True
@@ -36,8 +34,8 @@ def enable_schedule(db: Session, sid: str):
     db.refresh(schedule)
     return {"message": "Schedule enabled successfully", "schedule": schedule}
 
-def disable_schedule(db: Session, sid: str):
-    schedule = db.query(Schedule).filter_by(sid=sid).first()
+def disable_schedule(db: Session, data: ScheduleUpdate):
+    schedule = db.query(Schedule).filter_by(docid=data.docid, divid=data.divid, perid=data.perid).first()
     if not schedule:
         raise HTTPException(status_code=404, detail="Schedule not found")
     schedule.available = False

@@ -5,8 +5,11 @@ from sqlalchemy.orm import Session
 import json
 from services.doctor_service import create_or_update_hire
 from services.clinicdivision_service import create_clinic_division
+from services.schedule_service import create_schedule, enable_schedule, disable_schedule
 from schemas.doctor import DoctorAndHireCreate
 from schemas.clinicdivision import ClinicDivisionCreate
+from schemas.schedule import ScheduleCreate, ScheduleUpdate
+from models import Hire, Period, Clinicdivision
 
 clinic_console_router = APIRouter()
 
@@ -18,7 +21,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         return {"message": "User not logged in. Please log in first."}
 
     data = await request.json()
-    command = data.get("command").lower()
+    command = data.get("command")
 
     # sent session state to log
     print(f"Session state: {session}")
@@ -29,7 +32,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
     if current_state == 'welcome':
         if command == 'manage':
             session['state'] = 'manage'
-            return {"message": "Select manage option: doctor, schedule, room, division, period, room_schedule, info"}
+            return {"message": "Select manage option: doctor, schedule, room, division, period, room_schedule, info\n Note: Recommended construction order: division, doctor, room, period, schedule, room_schedule"}
         elif command == 'appointment':
             session['state'] = 'appointment'
             return {"message": "enable/disable appointment, update queue number"}
@@ -63,7 +66,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": "To Add/Update doctor, please enter in json form, columns includes \"{docid, docname, divid, startdate(optional), enddate(optional)}\""}
         elif command == 'schedule':
             session['state'] = 'schedule'
-            return {"message": "add schedule"}
+            return {"message": "Enter schedule command: add, enable, disable"}
         elif command == 'room':
             session['state'] = 'room'
             return {"message": "add room"}
@@ -110,14 +113,50 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
     elif current_state == 'schedule':
         if command == 'add':
             session['state'] = 'add_schedule'
-            return {"message": "add schedule"}
-        elif command == 'remove':
-            return {"message": "remove schedule"}
+            return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
+        elif command == 'enable':
+            session['state'] = 'enable_schedule'
+            return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
+        elif command == 'disable':
+            session['state'] = 'disable_schedule'
         elif command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
         else:
             return {"message": f"Unknown schedule command: {command}"}
+    
+    elif current_state in ['add_schedule', 'enable_schedule', 'disable_schedule']:
+        if command == 'back':
+            session['state'] = 'manage'
+            return {"message": "back to manage menu"}
+        else:
+            command = json.loads(command)
+            if command.get("docid") and command.get("divid") and command.get("perid"):
+                if db.query(Clinicdivision).filter_by(divid=command['divid'], cid=session['user_id']).first():
+                    return {"message": "Division not found"}
+                if not db.query(Hire).filter_by(docid=command['docid'], cid=session['user_id']).first():
+                    return {"message": "Doctor not found"}
+                if not db.query(Period).filter_by(perid=command['perid'], cid=session['user_id']).first():
+                    return {"message": "Period not found"}
+                
+                if current_state == 'add_schedule':
+                    result = create_schedule(db=db, schedule_data=ScheduleCreate(**command))
+                    if not result:
+                        return {"message": "Schedule not added, {}".format(result.json())}
+                    return {"message": "Schedule added successfully", "schedule": result}
+                elif current_state == 'enable_schedule':
+                    result = enable_schedule(db=db, data=ScheduleUpdate(**command))
+                    if not result:
+                        return {"message": "Schedule not enabled, {}".format(result.json())}
+                    return {"message": "Schedule enabled successfully", "schedule": result}
+                elif current_state == 'disable_schedule':
+                    result = disable_schedule(db=db, data=ScheduleUpdate(**command))
+                    if not result:
+                        return {"message": "Schedule not disabled, {}".format(result.json())}
+                    return {"message": "Schedule disabled successfully", "schedule": result}
+            else:
+                return {"message": "Please enter in json form, columns includes \"{docid, divid, perid}\""}
+
     
     # Room state
     elif current_state == 'room':
@@ -144,6 +183,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
             return {"message": "back to manage menu"}
         else:
             return {"message": f"Unknown division command: {command}"}
+
     elif current_state == 'add_division':
         if command == 'back':
             session['state'] = 'manage'
