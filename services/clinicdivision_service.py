@@ -18,8 +18,9 @@ def create_clinic_division(db: Session, clinic_division_data: ClinicDivisionCrea
 
 def enable_clinic_division(db: Session, clinic_division_data: ClinicDivisionUpdate):
     clinic_division = db.query(Clinicdivision).filter_by(divid=clinic_division_data.divid, cid=clinic_division_data.cid).first()
+    
     if not clinic_division:
-        raise HTTPException(status_code=404, detail="Clinic division not found")
+        return {"message": "Clinic division not found"}
     clinic_division.available = True
     db.commit()
     db.refresh(clinic_division)
@@ -28,7 +29,7 @@ def enable_clinic_division(db: Session, clinic_division_data: ClinicDivisionUpda
 def disable_clinic_division(db: Session, clinic_division_data: ClinicDivisionUpdate):
     clinic_division = db.query(Clinicdivision).filter_by(divid=clinic_division_data.divid, cid=clinic_division_data.cid).first()
     if not clinic_division:
-        raise HTTPException(status_code=404, detail="Clinic division not found")
+        return {"message": "Clinic division not found"}
     clinic_division.available = False
     db.commit()
     db.refresh(clinic_division)
