@@ -8,7 +8,7 @@ import random
 import pytest
 from utils.id_check import id_generator
 import string
-from models import Clinic
+from models import Patient
 
 ##pytest.skip(allow_module_level=True)
 
@@ -24,41 +24,41 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(cids):
+def generate_payload(pids):
 
-    rid = "R" + "".join(random.choices(string.digits, k=9))
-    cid = random.choice(cids)
-    rname = f"{random.randint(00000, 99999):05d}"
-
+    pid = random.choice(pids)
+    acct_pw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10)),
+    email = f"user_{random.randint(1000, 9999)}@example.com"
 
     return {
-        "rid": rid,
-        "cid": cid,
-        "rname": rname
+        "pid": pid,
+        "acct_pw": acct_pw,
+        "email": email
     }
 
-def get_existing_cids():
+
+def get_existing_ids():
 
     with SessionLocal() as db:
-        cids = [clinic.cid for clinic in db.query(Clinic).all()]
-    return cids
+        pids = [patient.pid for patient in db.query(Patient).all()]
+    return pids
 
-def test_create_rooms():
+def test_create_memberships():
 
     count = 50
-    cids = get_existing_cids()
+    pids = get_existing_ids()
 
-    if not cids:
-        raise ValueError("資料庫中沒有可用的 Clinics 資料，無法生成 Room 資料！")
+    if not pids:
+        raise ValueError("資料庫中沒有可用的資料，無法生成 Treatment 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_payload(cids)
-        response = client.post("/room", json=payload)
+        payload = generate_payload(pids)
+        response = client.post("/membership", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")
 
         assert response.status_code == 201, f"Failed at payload: {payload}"
         created_count += 1
 
-    print(f"成功新增 {created_count} 筆 Room 資料！")
+    print(f"成功新增 {created_count} 筆 Membership 資料！")

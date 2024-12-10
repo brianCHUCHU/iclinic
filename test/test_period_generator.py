@@ -24,7 +24,7 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_period_payload(cids):
+def generate_payload(cids):
 
     perid = f"{random.randint(0, 9999999999):010d}"
     cid = random.choice(cids)
@@ -45,7 +45,7 @@ def generate_period_payload(cids):
         "endtime": endtime.strftime("%H:%M"),
     }
 
-def get_existing_cids():
+def get_existing_ids():
 
     with SessionLocal() as db:
         cids = [clinic.cid for clinic in db.query(Clinic).all()]
@@ -54,14 +54,14 @@ def get_existing_cids():
 def test_create_periods():
 
     count = 50  # 設定要生成的 Period 數量
-    cids = get_existing_cids()  # 獲取有效的 Clinic Ids
+    cids = get_existing_ids()  # 獲取有效的 Clinic Ids
 
     if not cids:
         raise ValueError("資料庫中沒有可用的 Clinics 資料，無法生成 Period 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_period_payload(cids)
+        payload = generate_payload(cids)
         response = client.post("/period", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")
