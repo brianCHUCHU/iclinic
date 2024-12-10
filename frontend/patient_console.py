@@ -13,18 +13,16 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
         return {"message": "User not logged in. Please log in first."}
 
     data = await request.json()
-    command = data.get("command", "").lower()
+    command = data.get("command", "")
 
-    if session['welcome_state']:
+    if session['state'] == 'welcome':
         if command in ["record", "pending"]:
-            session['welcome_state'] = False
+            session['state'] = command
 
             if command == "record":
-                session['record_state'] = True
                 appointments = view_past_appointments(db=db, pid=user_id)
                 reservations = view_past_reservations(db=db, pid=user_id)
             elif command == "pending":
-                session['pending_state'] = True
                 appointments = view_future_appointments(db=db, pid=user_id)
                 reservations = view_future_reservations(db=db, pid=user_id)
 
@@ -40,25 +38,24 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
                 "records": combined_records,
             }
         elif command == "schedule":
+            session['state'] = 'schedule'
             return {"message": "Here is your schedule."}
         elif command == "exit":
             session.clear()
             return {"message": "Goodbye!"}
         else:
             return {"message": f"Unknown command: {command}"}
-    elif session['record_state']:
+    elif session['state'] == 'record':
         if command == "back":
-            session['welcome_state'] = True
-            session['record_state'] = False
+            session['state'] = 'welcome'
             return {"message": "Back to main menu."}
         else:
             return {"message": f"Command `{command}` not valid in the current state."}
-    elif session['pending_state']:
+    elif session['state'] == 'pending':
         if command == "cancel":
             return {"message": "Cancelled"}
         elif command == "back":
-            session['welcome_state'] = True
-            session['pending_state'] = False
+            session['state'] = 'welcome'
             return {"message": "Back to main menu."}
         else:
             return {"message": f"Command `{command}` not valid in the current state."}

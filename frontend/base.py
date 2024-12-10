@@ -120,7 +120,13 @@ def clinic_console():
     </head>
     <body>
         <h1>Clinic Console</h1>
-        <div id="output">Welcome to the Clinic Console! Type your command below...</div>
+        <div id="output">
+            Welcome to the Clinic Console!<br>
+            Enter to Select Function:<br><br>
+            Type "manage" to Manage your Doctors/Rooms/Schedules/Divisions/Periods/Info<br>
+            Type "appointment" to Enable/Disable Your Appointments/Reservations System / Update Appointment Queue Number / Create Physical Appointment<br>
+            Type "query" to Query Information
+        </div>
         <input id="command" type="text" placeholder="Type your command here and press Enter...">
         <script>
             const output = document.getElementById("output");

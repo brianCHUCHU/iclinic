@@ -29,7 +29,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
     if current_state == 'welcome':
         if command == 'manage':
             session['state'] = 'manage'
-            return {"message": "start managing"}
+            return {"message": "Select manage option: doctor, schedule, room, division, period, room_schedule, info"}
         elif command == 'appointment':
             session['state'] = 'appointment'
             return {"message": "enable/disable appointment, update queue number"}
@@ -79,6 +79,9 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         elif command == 'room_schedule':
             session['state'] = 'room_schedule'
             return {"message": "room schedule"}
+        elif command == 'period':
+            session['state'] = 'period'
+            return {"message": "add period"}
         else:
             return {"message": f"Unknown manage command: {command}"}
     
@@ -167,6 +170,6 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         elif command == 'back':
             session['state'] = 'manage'
             return {"message": "back to manage menu"}
-    
+
     else:
         return {"message": f"Unknown clinic command: {command}"}

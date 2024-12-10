@@ -58,9 +58,6 @@ def authenticate_membership_endpoint(auth: MembershipAuth, request: Request, db:
     # 将用户信息存入会话
     session = request.session
     session['user_id'] = result.pid
-    session['welcome_state'] = True
-    session['record_state'] = False  # 初始化状态
-    session['schedule_state'] = False  # 初始化状态
-    session['pending_state'] = False
+    session['state'] = 'welcome'
     
     return {"message": "Authentication successful", "membership": result.pid}
