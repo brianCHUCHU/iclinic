@@ -12,10 +12,18 @@ import re
 def create_patient(db: Session, patient_data: PatientCreate):
     if not id_validator(patient_data.pid):
         raise HTTPException(status_code=400, detail="Invalid patient id")
+    
+    existing_patient = db.query(Patient).filter_by(pid=patient_data.pid).first()
+    if existing_patient:
+        raise HTTPException(status_code=400, detail="Patient already exists")
     new_patient = Patient(**patient_data.model_dump())
-    db.add(new_patient)
-    db.commit()
-    db.refresh(new_patient)
+    try:
+        db.add(new_patient)
+        db.commit()
+        db.refresh(new_patient)
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
     return new_patient
 
 # 查詢病患 (根據 PID 或其他條件)
