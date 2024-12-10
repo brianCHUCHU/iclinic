@@ -4,6 +4,9 @@ from utils.db import get_db
 from sqlalchemy.orm import Session
 from services.appointment_service import *
 import requests
+from datetime import datetime
+from sqlalchemy import func
+
 
 patient_console_router = APIRouter()
 
@@ -25,18 +28,12 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
                 appointments = view_past_appointments(db=db, pid=user_id)
             elif command == "pending":
                 appointments = view_future_appointments(db=db, pid=user_id)
+            elif command == "create":
+                return {"message": "Enter the SID for the new appointment."}
 
-            records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
+            records = [appt.to_dict() for appt in appointments]
+            return {"message": f"Here are your {command} records.", "records": records}
 
-            response_data = {
-                "message": f"Here are your {command} records.",
-                "records": [
-                    {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
-                    for record in records
-                ],
-            }
-            return response_data
-        
         elif command == "create":
             session['state'] = 'create'
             return {"message": "Enter the details of the appointment in the following format:\n" "'pid,sid,date,order,applytime,status,attendance'"}
@@ -64,6 +61,7 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
         
 
     else:
+        session['state'] = 'welcome'
         return {"message": f"Command `{command}` not valid in the current state."}
 
 
@@ -71,6 +69,7 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
 async def execute_patient_command(request: Request, db: Session = Depends(get_db)):
     session = request.session
     user_id = session.get('user_id')
+
     if not user_id:
         return {"message": "User not logged in. Please log in first."}
 
@@ -78,25 +77,34 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
     command = data.get("command", "")
 
     if command == "create":
-        # 創建新的 appointment
         sid = data.get("sid")
         date = data.get("date")
-        order = data.get("order")
+        order = db.query(func.max(Appointment.order)).scalar() or 0
         try:
-            response = requests.post("http://127.0.0.1:8000/appointments", json={
+            appointment_data = {
                 "pid": user_id,
                 "sid": sid,
                 "date": date,
-                "order": order
-            })
-            if response.status_code == 201:
-                return {"message": "Appointment created successfully."}
-            else:
-                return {"message": f"Failed to create appointment: {response.json().get('detail', 'Unknown error')}"}
-        except Exception as e:
-            return {"message": f"Error: {str(e)}"}
+                "order": int(order),
+                "applytime": datetime.now().isoformat()
 
-    # 處理其他指令（例如 record, pending）
-    return {"message": f"Command {command} not recognized."}
+            }
+            result = create_appointment(db=db, appointment_data=appointment_data)
+            return {"message": f"Appointment created successfully: {result}"}
+        except Exception as e:
+            return {"message": f"Failed to create appointment: {str(e)}"}
+
+    elif command == "record":
+        appointments = view_past_appointments(db=db, pid=user_id)
+        records = [appointment.to_dict() for appointment in appointments]
+        return {"message": "Here are your past appointments.", "records": records}
+
+    elif command == "pending":
+        appointments = view_future_appointments(db=db, pid=user_id)
+        records = [appointment.to_dict() for appointment in appointments]
+        return {"message": "Here are your pending appointments.", "records": records}
+
+    return {"message": f"Unknown command: {command}"}
+
 
     

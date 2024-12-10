@@ -26,7 +26,7 @@ def patient_console():
         <div id="output">
             Welcome to the Patient Console!<br>
             Enter to Select Function:<br><br>
-            Type "create" to Create an Appointment (for Treatment)<br>
+            Type "create" to Create an Appointment<br>
             Type "pending" to View/Cancel/Update Your Scheduled Appointments<br>
             Type "record" to View Your Past Appointments
         </div>
@@ -39,7 +39,7 @@ def patient_console():
             const commandInput = document.getElementById("command");
             const backBtn = document.getElementById("back-btn");
 
-            let selectedRecord = null; // Store selected record for operation
+            let state = "welcome"; // 用戶當前狀態
 
             commandInput.addEventListener("keypress", async function (event) {
                 if (event.key === "Enter") {
@@ -48,20 +48,22 @@ def patient_console():
                     output.innerHTML += `<div>> ${command}</div>`;
                     commandInput.value = "";
 
-                    if (selectedRecord) {
-                        // Operate on the selected record
-                        const response = await fetch(`/records/${selectedRecord.id}/operate`, {
+                    if (state === "create") {
+                        // 收集用戶輸入的 appointment 資料
+                        const sid = command;
+                        const date = prompt("Enter the appointment date (YYYY-MM-DD):");
+
+                        // 發送創建請求
+                        const response = await fetch("/execute/patient", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ command }),
+                            body: JSON.stringify({ command: "create", sid, date, order }),
                         });
                         const result = await response.json();
                         output.innerHTML += `<div>${result.message}</div>`;
-                        selectedRecord = null; // Reset the selection
-                        recordsDiv.style.display = "none";
-                        backBtn.style.display = "block";
+                        state = "welcome"; // 重置狀態
                     } else {
-                        // Send command to patient console
+                        // 發送一般指令到後端
                         const response = await fetch("/execute/patient", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
@@ -72,7 +74,13 @@ def patient_console():
                         output.innerHTML += `<div>${result.message}</div>`;
                         output.scrollTop = output.scrollHeight;
 
-                        // Display records if available
+                        // 如果進入創建模式
+                        if (command === "create") {
+                            state = "create";
+                            output.innerHTML += `<div>Please enter the SID for the new appointment:</div>`;
+                        }
+
+                        // 顯示記錄
                         if (result.records) {
                             recordsDiv.style.display = "block";
                             recordsDiv.innerHTML = "<h3>Your Records:</h3>";
@@ -81,7 +89,7 @@ def patient_console():
                                 let recordDetails = Object.entries(record)
                                     .map(([key, value]) => `${key}: ${value}`)
                                     .join("<br>");
-                            recordDiv.innerHTML = `${recordDetails}<hr>`;
+                                recordDiv.innerHTML = `${recordDetails}<hr>`;
                                 recordsDiv.appendChild(recordDiv);  
                             });
                         }
@@ -92,6 +100,8 @@ def patient_console():
     </body>
     </html>
     """)
+
+
 
 
 @frontend_router.get("/clinic_console", response_class=HTMLResponse)
