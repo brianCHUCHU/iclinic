@@ -26,7 +26,7 @@ def patient_console():
         <div id="output">
             Welcome to the Patient Console!<br>
             Enter to Select Function:<br><br>
-            Type "schedule" to Schedule an Appointment (for Treatment)<br>
+            Type "create" to Create an Appointment (for Treatment)<br>
             Type "pending" to View/Cancel/Update Your Scheduled Appointments<br>
             Type "record" to View Your Past Appointments
         </div>
