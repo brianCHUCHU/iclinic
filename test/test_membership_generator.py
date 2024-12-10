@@ -27,7 +27,7 @@ client = TestClient(app)
 def generate_payload(pids):
 
     pid = random.choice(pids)
-    acct_pw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10)),
+    acct_pw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10))
     email = f"user_{random.randint(1000, 9999)}@example.com"
 
     return {
