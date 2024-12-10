@@ -24,15 +24,17 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(pids):
-
-    existing_pids = []
-    pid
+def valid(pids ,existing_pids):
     while True:
         pid = random.choice(pids ,existing_pids)
         if pid not in existing_pids:  # 確保 pid 唯一
             existing_pids.append(pid)
-            break
+            return pid
+
+def generate_payload(pids):
+
+    existing_pids = []
+    pid = valid(pids ,existing_pids)
     acctpw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10))
     email = f"user_{random.randint(1000, 9999)}@example.com"
 
