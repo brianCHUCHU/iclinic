@@ -27,6 +27,7 @@ client = TestClient(app)
 def generate_payload(pids):
 
     existing_pids = []
+    pid
     while True:
         pid = random.choice(pids ,existing_pids)
         if pid not in existing_pids:  # 確保 pid 唯一
