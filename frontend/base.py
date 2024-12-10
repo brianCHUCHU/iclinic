@@ -159,20 +159,20 @@ async def login_patient_page():
         <h1>Patient Login</h1>
         <form id="patient-login-form">
             <input class="input" id="pid" type="text" placeholder="Enter your Patient ID" required>
-            <input class="input" id="acctpw" type="password" placeholder="Enter your password" required>
+            <input class="input" id="acct_pw" type="password" placeholder="Enter your password" required>
             <button type="button" class="button" onclick="loginPatient()">Login</button>
         </form>
         <script>
             async function loginPatient() {
                 const pid = document.getElementById('pid').value;
-                const acctpw = document.getElementById('acctpw').value;
+                const acct_pw = document.getElementById('acct_pw').value;
 
                 const response = await fetch('/memberships/authenticate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ pid, acctpw })
+                    body: JSON.stringify({ pid, acct_pw })
                 });
 
                 if (response.ok) {

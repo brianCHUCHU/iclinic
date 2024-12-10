@@ -44,7 +44,7 @@ def generate_clinic_payload(row):
         "fee": random.choice([100, 150, 200, 250]),
         "queue_type": random.choice(["S", "I"]),
         "acct_name": "".join(random.choices(string.ascii_lowercase, k=5)),
-        "acctpw": "".join(random.choices(string.ascii_letters + string.digits, k=10)),
+        "acct_pw": "".join(random.choices(string.ascii_letters + string.digits, k=10)),
         "cname": row["醫事機構名稱"],
         "city": city,
         "district": district,

@@ -6,7 +6,7 @@ client = TestClient(app)
 def test_create_membership():
     payload = {
         "pid": "T124488950",
-        "acctpw": "securepassword",
+        "acct_pw": "securepassword",
         "email": "bdasdf@gmail.com"
     }
     response = client.post("/memberships", json=payload)
@@ -20,7 +20,7 @@ def test_get_membership_by_id():
 def test_update_membership():
     payload = {
         "pid": "T124488950",
-        "acctpw": "securepassword",
+        "acct_pw": "securepassword",
         "email": "ccccc@gmail.com"
     }   
     response = client.put("/memberships/T124488950", json=payload)
@@ -32,7 +32,7 @@ def test_update_membership():
 def test_authenticate_membership():
     payload = {
         "pid": "T124488950",
-        "acctpw": "securepassword"
+        "acct_pw": "securepassword"
     }
     response = client.post("/memberships/authenticate", json=payload)
     assert response.status_code == 200

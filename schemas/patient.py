@@ -19,14 +19,14 @@ class PatientUpdate(BaseModel):
 
 class MembershipCreate(BaseModel):
     pid: str
-    acctpw: str
+    acct_pw: str
     email: str
 
 class MembershipUpdate(BaseModel):
     pid: str
-    acctpw: Optional[str]
+    acct_pw: Optional[str]
     email: Optional[str]
 
 class MembershipAuth(BaseModel):
     pid: str
-    acctpw: str
+    acct_pw: str

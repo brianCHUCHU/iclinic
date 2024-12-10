@@ -24,35 +24,44 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_member(db: Session, count: int = 1):
+def generate_payload(pids):
 
-    generated_pids = set()
-    patients = []
+    while True:
+        pid = id_generator()
+        if pid not in pids:  # 確保 pid 唯一
+            break
+    acct_pw = "".join(random.choices(string.ascii_letters + string.digits, k=10))
+    email = f"user_{random.randint(1000, 9999)}@example.com"
 
+    return {
+        "pid": pid,
+        "acct_pw": acct_pw,
+        "email": email,
+    }
+
+def get_existing_ids():
+
+    with SessionLocal() as db:
+        pids = [patient.pid for patient in db.query(Patient).all()]
+    return pids
+
+def test_create_treatments():
+
+    count = 50
+    pids = get_existing_ids()
+
+    if not pids:
+        raise ValueError("資料庫中沒有可用的資料，無法生成 Membership 資料！")
+
+    created_count = 0
     for _ in range(count):
-        while True:
-            pid = id_generator()
-            if pid not in generated_pids:
-                generated_pids.add(pid)
-                break
-        acctpw: str ="".join(random.choices(string.ascii_letters + string.digits, k=10))
-        email = f"user_{random.randint(1000, 9999)}@example.com"
+        payload = generate_payload(pids)
+        response = client.post("/membership", json=payload)
+        print(f"Payload: {payload}")
+        print(f"Response: {response.status_code} - {response.json()}")
 
-        patient_data = {
-            "pid": pid,
-            "acctpw": acctpw,
-            "email": email
-        }
+        assert response.status_code == 201, f"Failed at payload: {payload}"
+        created_count += 1
 
-        new_patient = Patient(**patient_data)
-        patients.append(new_patient)
+    print(f"成功新增 {created_count} 筆 Membership 資料！")
 
-    db.add_all(patients)
-    db.commit()
-    return patients
-
-def test_generate_member():
-    count = 100
-    with get_db_session() as db:
-            patients = generate_member(db, count=count)
-            assert len(patients) == count
