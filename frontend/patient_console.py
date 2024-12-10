@@ -8,6 +8,7 @@ from models import Appointment, Schedule, Period
 import json
 import datetime
 
+
 patient_console_router = APIRouter()
 
 @patient_console_router.post("/execute/patient")
@@ -26,19 +27,30 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
 
             if command == "record":
                 appointments = view_past_appointments(db=db, pid=user_id)
+                records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
+
+                response_data = {
+                    "message": f"Here are your {command} records.",
+                    "records": [
+                        {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
+                        for record in records
+                    ],
+                }
+                return response_data
+
             elif command == "pending":
                 appointments = view_future_appointments(db=db, pid=user_id)
 
-            records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
+                records = [  {**appt.to_dict(), "type": "appointment"} for appt in appointments]
 
-            response_data = {
-                "message": f"Here are your {command} records.",
-                "records": [
-                    {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
-                    for record in records
-                ],
-            }
-            return response_data
+                response_data = {
+                    "message": f"Here are your {command} records.",
+                    "records": [
+                        {**record, "date": record["date"].strftime('%Y-%m-%d'), "applytime": record["applytime"].isoformat()}
+                        for record in records
+                    ],
+                }
+                return response_data
         
         elif command == "create":
             session['state'] = 'create'
@@ -60,6 +72,11 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
             return {"message": f"Command `{command}` not valid in the current state."}
     elif session['state'] == 'pending':
         if command == "cancel":
+            command = data.get("command")
+            try:
+                command = json.loads(command)
+            except:
+                return {"message": "Please enter in json form, columns includes \"{sid, sid, date}\""}
             return {"message": "Cancelled"}
         elif command == "back":
             session['state'] = 'welcome'
