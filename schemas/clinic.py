@@ -15,14 +15,14 @@ class ClinicBase(BaseModel):
 
 class ClinicCreate(ClinicBase):
     cid: str
-    acct_pw: str
+    acctpw: str
     available : bool = True
 
 class ClinicUpdate(BaseModel):
     fee: int = None
     queue_type: str = None
     acct_name: str = None
-    acct_pw: str = None
+    acctpw: str = None
     cname: str = None
     city: str = None
     district: str = None

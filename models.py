@@ -17,7 +17,7 @@ class Clinic(Base):
     fee = Column(Integer, nullable=False)
     queue_type = Column(CHAR(1), nullable=False)
     acct_name = Column(String(30), nullable=False, unique=True)
-    acct_pw = Column(String(100), nullable=False)
+    acctpw = Column(String(100), nullable=False)
     cname = Column(String(30), nullable=False)
     city = Column(String(50), nullable=False)
     district = Column(String(50), nullable=False)
