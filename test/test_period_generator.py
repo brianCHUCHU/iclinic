@@ -11,7 +11,7 @@ from utils.id_check import id_generator
 from datetime import time, timedelta
 import string
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -43,7 +43,7 @@ def generate_payload(cids):
         "cid": cid,
         "weekday": weekday,
         "starttime": starttime.strftime("%H:%M"),
-        "endtime": endtime.strftime("%H:%M"),
+        "endtime": endtime.strftime("%H:%M")
     }
 
 def get_existing_ids():
@@ -54,7 +54,7 @@ def get_existing_ids():
 
 def test_create_periods():
 
-    count = 50  # 設定要生成的 Period 數量
+    count = 5000  # 設定要生成的 Period 數量
     cids = get_existing_ids()  # 獲取有效的 Clinic Ids
 
     if not cids:

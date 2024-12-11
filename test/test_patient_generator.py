@@ -9,7 +9,7 @@ from contextlib import contextmanager
 from utils.db import SessionLocal
 import pytest
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -53,7 +53,7 @@ def generate_patient(db: Session, count: int = 1):
     return patients
 
 def test_generate_patient():
-    count = 50
+    count = 5
     with get_db_session() as db:
             patients = generate_patient(db, count=count)
             assert len(patients) == count

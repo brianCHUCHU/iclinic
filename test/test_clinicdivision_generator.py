@@ -10,7 +10,7 @@ from utils.id_check import id_generator
 import string
 from models import Clinic, Division ,Clinicdivision
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -54,7 +54,7 @@ def get_ids():
 
 def test_create_rooms():
 
-    count = 50
+    count = 5000
     divids ,cids = get_ids()
     existings = get_existings()
 

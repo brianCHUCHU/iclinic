@@ -6,12 +6,18 @@ from passlib.context import CryptContext
 from sqlalchemy.orm.exc import NoResultFound
 
 def create_period(db: Session, period_data: PeriodCreate):
-    existing_period = db.query(Period).filter_by(perid=period_data.perid).first()
-    if existing_period:
-        return HTTPException(status_code=400, detail="Period already exists")
+    import random
+    import string
+
+    # Generate a unique random room ID
+    def generate_random_room_id():
+        rid = "P" + ''.join(random.choices(string.digits, k=9))
+        while db.query(Period).filter(Period.perid == rid).first():
+            rid = "P" + ''.join(random.choices(string.digits, k=9))
+        return rid
     period_dict = period_data.model_dump()
     new_period = Period(**period_dict)
-
+    new_period.perid = generate_random_room_id()
     db.add(new_period)
     db.commit()
     db.refresh(new_period)

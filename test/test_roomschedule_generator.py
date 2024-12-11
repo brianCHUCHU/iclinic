@@ -10,7 +10,7 @@ from utils.id_check import id_generator
 import string
 from models import Schedule, Period, Room, Roomschedule
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -68,7 +68,7 @@ def get_ids():
 
 def test_roomschedule_generator():
 
-    count = 50
+    count = 500
     sids = get_ids()
 
     if not sids:

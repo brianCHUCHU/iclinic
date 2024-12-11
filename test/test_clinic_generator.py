@@ -8,7 +8,7 @@ import pytest
 import os
 import csv
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 client = TestClient(app)
 fake = Faker()
@@ -69,7 +69,7 @@ def test_clinic_generator():
     file_path = "./src/A21030000I-D21004-009.csv"
     df = pd.read_csv(file_path, encoding="utf-8")
 
-    limit = 3
+    limit = 1000
     limited_df = df.head(limit)
 
     created_count = 0 

@@ -9,7 +9,7 @@ import random
 import pytest
 from utils.id_check import id_generator
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -57,7 +57,7 @@ def generate_hire_payload(cids):
 
 def test_create_hires():
 
-    count = 20  # 設定要生成的 hire 數量
+    count = 5000  # 設定要生成的 hire 數量
     cids = get_ids()
 
     if not cids :

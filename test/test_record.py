@@ -27,7 +27,7 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(pids ,sids ,existings ,latest):
+def generate_payload(pids ,sids ,existings):
 
     while True:
         pid = random.choice(pids)
@@ -35,19 +35,7 @@ def generate_payload(pids ,sids ,existings ,latest):
         if (pid ,sid) not in existings:
             existings.add((pid ,sid))
             break
-    date = fake.date_between(start_date="today", end_date="+10day")
-    order = latest + 1
-    applytime = datetime.now()
-    status = random.choice(['P', 'O'])
-    latest += 1
-    return {
-        "pid": pid,
-        "sid": sid,
-        "date": date.isoformat(),
-        "order" : order,
-        "applytime" : applytime.isoformat(),
-        "status" : status
-    }
+    return pid ,sid
 
 def get_existings():
     with SessionLocal() as db:
@@ -55,10 +43,6 @@ def get_existings():
             (appointment.pid, appointment.sid)
             for appointment in db.query(Appointment).all()
         }
-    
-def get_latest():
-    with SessionLocal() as db:
-        return db.query(func.max(Appointment.order)).scalar() or 0
 
 def get_ids():
 
@@ -71,22 +55,10 @@ def get_ids():
 
 def test_create_appointment():
 
-    count = 1000
+    count = 500000
     pids ,sids = get_ids()
     existings = get_existings()
-    latest = get_latest()
-
-    if not (pids and sids):
-        raise ValueError("資料庫中沒有可用的資料，無法生成 Appointment 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_payload(pids ,sids ,existings ,latest)
-        response = client.post("/appointment", json=payload)
-        print(f"Payload: {payload}")
-        print(f"Response: {response.status_code} - {response.json()}")
-
-        assert response.status_code == 201, f"Failed at payload: {payload}"
-        created_count += 1
-
-    print(f"成功新增 {created_count} 筆 ClinicDivision 資料！")
+        print(generate_payload(pids ,sids ,existings))

@@ -42,6 +42,8 @@ def generate_payload(docids):
             if not (divid and cid):
                 continue
             perids = [ period.perid for period in db.query(Period).filter(Period.cid == cid).all()]
+            if not perids:
+                continue
             perid = random.choice(perids)
             if not perid:
                 continue
@@ -66,7 +68,7 @@ def get_ids():
 
 def test_create_schedules():
 
-    count = 50
+    count = 5000
     docids = get_ids()
 
     if not docids:

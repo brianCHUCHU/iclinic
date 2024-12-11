@@ -6,16 +6,26 @@ from sqlalchemy.orm.exc import NoResultFound
 from utils.db import get_db
 
 def create_room(db: Session, room_data: RoomCreate):
-    existing_room = db.query(Room).filter_by(rid=room_data.rid, cid=room_data.cid).first()
-    if existing_room:
-        raise HTTPException(status_code=400, detail="Room already exists")
+    import random
+    import string
+
+    # Generate a unique random room ID
+    def generate_random_room_id():
+        rid = "R" + ''.join(random.choices(string.digits, k=9))
+        while db.query(Room).filter(Room.rid == rid).first():
+            rid = "R" + ''.join(random.choices(string.digits, k=9))
+        return rid
+
+    # Convert RoomCreate to dictionary and create a new Room entry
     room_dict = room_data.model_dump()
     new_room = Room(**room_dict)
+    new_room.rid = generate_random_room_id()
 
     db.add(new_room)
     db.commit()
     db.refresh(new_room)
-    return {"message": "Room created successfully","room":new_room}
+
+    return {"message": "Room created successfully", "room": new_room}
 
 def update_room_name(db: Session, rid: str, new_name: RoomUpdate):
     room = db.query(Room).filter_by(rid=rid).first()

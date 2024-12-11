@@ -63,15 +63,14 @@ def get_existing_ids():
 
     with SessionLocal() as db:
         pids = [patient.pid for patient in db.query(Patient).all()]
+    if not pids:
+        return None
     return pids
 
 def test_create_memberships():
 
-    count = 50
+    count = 5000
     pids = get_existing_ids()
-
-    if not pids:
-        raise ValueError("資料庫中沒有可用的資料，無法生成 Membership 資料！")
 
     created_count = 0
     for _ in range(count):

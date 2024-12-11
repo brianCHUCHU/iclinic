@@ -45,7 +45,7 @@ def get_existing_cids():
 
 def test_create_rooms():
 
-    count = 50
+    count = 5000
     cids = get_existing_cids()
 
     if not cids:

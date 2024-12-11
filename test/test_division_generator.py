@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app  # 假設你的 FastAPI 應用位於 main.py
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 client = TestClient(app)
 
