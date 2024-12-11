@@ -10,7 +10,7 @@ from utils.id_check import id_generator
 import string
 from models import Clinic
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
@@ -45,7 +45,7 @@ def get_existing_cids():
 
 def test_create_rooms():
 
-    count = 5000
+    count = 500
     cids = get_existing_cids()
 
     if not cids:

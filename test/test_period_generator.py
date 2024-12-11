@@ -54,7 +54,7 @@ def get_existing_ids():
 
 def test_create_periods():
 
-    count = 5000  # 設定要生成的 Period 數量
+    count = 500  # 設定要生成的 Period 數量
     cids = get_existing_ids()  # 獲取有效的 Clinic Ids
 
     if not cids:

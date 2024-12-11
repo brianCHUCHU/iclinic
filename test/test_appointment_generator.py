@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 from main import app
 from sqlalchemy.orm import Session
 from utils.db import SessionLocal
-from models import Patient, Schedule, Appointment
+from models import Patient, Schedule, Appointment, Period
 from faker import Faker
 from contextlib import contextmanager
 import random
@@ -27,27 +27,37 @@ fake = Faker()
 
 client = TestClient(app)
 
-def generate_payload(pids ,sids ,existings ,latest):
+def generate_payload(pids ,sids ,existings):
 
-    while True:
-        pid = random.choice(pids)
-        sid = random.choice(sids)
-        if (pid ,sid) not in existings:
-            existings.add((pid ,sid))
-            break
-    date = fake.date_between(start_date="today", end_date="+10day")
-    order = latest + 1
-    applytime = datetime.now()
-    status = random.choice(['P', 'O'])
-    latest += 1
-    return {
-        "pid": pid,
-        "sid": sid,
-        "date": date.isoformat(),
-        "order" : order,
-        "applytime" : applytime.isoformat(),
-        "status" : status
-    }
+    with SessionLocal() as db:
+        while True:
+            pid = random.choice(pids)
+            sid = random.choice(sids)
+            if (pid ,sid) not in existings:
+                existings.add((pid ,sid))
+                break
+        perid_row = db.query(Schedule.perid).filter(Schedule.sid == sid).first()
+        if perid_row:
+            perid = perid_row[0]
+        weekday_row = db.query(Period.weekday).filter(Schedule.perid == perid).first()
+        if weekday_row:
+            weekday = weekday_row[0]
+        weekday = weekday-1
+        while True:
+            date = fake.date_between(start_date="today", end_date="+20days")
+            if date.weekday() == weekday:
+                break
+        order = get_latest(sid, date)+1
+        applytime = datetime.now()
+        status = random.choice(['P', 'O'])
+        return {
+            "pid": pid,
+            "sid": sid,
+            "date": date.isoformat(),
+            "order" : order,
+            "applytime" : applytime.isoformat(),
+            "status" : status
+        }
 
 def get_existings():
     with SessionLocal() as db:
@@ -56,9 +66,15 @@ def get_existings():
             for appointment in db.query(Appointment).all()
         }
     
-def get_latest():
+def get_latest(sid, date):
     with SessionLocal() as db:
-        return db.query(func.max(Appointment.order)).scalar() or 0
+        # 查詢符合指定 sid 和 date 的最大 order
+        return (
+            db.query(func.max(Appointment.order))
+            .filter(Appointment.sid == sid, Appointment.date == date)
+            .scalar()
+            or 0  # 如果查詢結果為 None，返回 0
+        )
 
 def get_ids():
 
@@ -74,14 +90,13 @@ def test_create_appointment():
     count = 1000
     pids ,sids = get_ids()
     existings = get_existings()
-    latest = get_latest()
 
     if not (pids and sids):
         raise ValueError("資料庫中沒有可用的資料，無法生成 Appointment 資料！")
 
     created_count = 0
     for _ in range(count):
-        payload = generate_payload(pids ,sids ,existings ,latest)
+        payload = generate_payload(pids ,sids ,existings )
         response = client.post("/appointment", json=payload)
         print(f"Payload: {payload}")
         print(f"Response: {response.status_code} - {response.json()}")

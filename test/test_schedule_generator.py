@@ -68,7 +68,7 @@ def get_ids():
 
 def test_create_schedules():
 
-    count = 5000
+    count = 500
     docids = get_ids()
 
     if not docids:

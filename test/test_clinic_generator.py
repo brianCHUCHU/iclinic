@@ -55,7 +55,7 @@ def generate_clinic_payload(row):
         "address": address,
         "available": True
     }
-    csv_file = "./src/clinic_accounts.csv"
+    csv_file = "./pw/clinic_accounts.csv"
     file_exists = os.path.isfile(csv_file)
     with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
@@ -69,7 +69,7 @@ def test_clinic_generator():
     file_path = "./src/A21030000I-D21004-009.csv"
     df = pd.read_csv(file_path, encoding="utf-8")
 
-    limit = 1000
+    limit = 100
     limited_df = df.head(limit)
 
     created_count = 0 

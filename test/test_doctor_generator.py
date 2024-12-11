@@ -57,7 +57,7 @@ def generate_hire_payload(cids):
 
 def test_create_hires():
 
-    count = 5000  # 設定要生成的 hire 數量
+    count = 500  # 設定要生成的 hire 數量
     cids = get_ids()
 
     if not cids :

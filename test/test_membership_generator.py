@@ -42,7 +42,7 @@ def generate_payload(pids):
     birthdate = fake.date_of_birth(minimum_age=18, maximum_age=100)
     gender = fake.random_element(elements=["M", "F"])
 
-    csv_file = "./src/membership_accounts.csv"
+    csv_file = "./pw/membership_accounts.csv"
     file_exists = os.path.isfile(csv_file)
     with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
@@ -69,7 +69,7 @@ def get_existing_ids():
 
 def test_create_memberships():
 
-    count = 5000
+    count = 500
     pids = get_existing_ids()
 
     created_count = 0

@@ -67,7 +67,7 @@ def get_ids():
 
 def test_create_rooms():
 
-    count = 5000
+    count = 500
     pids ,sids = get_ids()
     existings = get_existings()
     

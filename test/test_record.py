@@ -61,4 +61,4 @@ def test_create_appointment():
 
     created_count = 0
     for _ in range(count):
-        print(generate_payload(pids ,sids ,existings))
+        ans =generate_payload(pids ,sids ,existings)
