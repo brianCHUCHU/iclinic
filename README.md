@@ -28,3 +28,23 @@ DB_PASSWORD="your_password"
 conda activate fastapi_postgres_env
 uvicorn main:app --reload
 ```
+
+# Valid Account and Password
+
+clinic帳號
+```
+tdbjf
+Q67kXtqyTW
+```
+
+patient帳號1
+```
+I121674754
+UlBVd5CjHK
+```
+
+patient帳號2
+```
+T143060794
+r7D3QwuvqH
+```
