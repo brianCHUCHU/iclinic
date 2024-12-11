@@ -16,6 +16,7 @@ from schemas.period import PeriodCreate
 from schemas.schedule import ScheduleCreate, ScheduleUpdate
 from schemas.roomschedule import RoomScheduleCreate, RoomScheduleUpdate
 from models import Hire, Period, Clinicdivision, Room, Roomschedule
+from datetime import datetime
 
 clinic_console_router = APIRouter()
 
@@ -65,7 +66,7 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
                 # add for share lock
                 result = db.query(Clinicdivision).filter_by(divid=command, cid=session['user_id']).first()
                 # update queue number and last update
-                result.queue_number += 1
+                result.queuenumber += 1
                 result.last_update = datetime.now()
                 db.commit()
                 db.refresh(result)
@@ -81,11 +82,11 @@ async def execute_clinic_command(request: Request, db: Session = Depends(get_db)
         try:
             result = db.query(Room).filter_by(rid=command, cid=session['user_id']).first()
             # update queue number and last update
-            result.queue_number += 1
+            result.queuenumber += 1
             result.last_update = datetime.now()
             db.commit()
             db.refresh(result)
-            return {"message": "Queue number updated successfully.", "result": result}
+            return {"message": "Queue number updated successfully".format(result.queuenumber), "result": result}
         except Exception as e:
             return {"message": f"Failed to update queue number: {str(e)}"}
 
