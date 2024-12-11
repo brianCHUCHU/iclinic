@@ -8,7 +8,7 @@ import pytest
 import os
 import csv
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 client = TestClient(app)
 fake = Faker()
@@ -55,7 +55,7 @@ def generate_clinic_payload(row):
         "address": address,
         "available": True
     }
-    csv_file = "./src/clinic_accounts.csv"
+    csv_file = "./pw/clinic_accounts.csv"
     file_exists = os.path.isfile(csv_file)
     with open(csv_file, mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)

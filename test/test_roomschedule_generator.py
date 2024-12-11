@@ -10,7 +10,7 @@ from utils.id_check import id_generator
 import string
 from models import Schedule, Period, Room, Roomschedule
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():

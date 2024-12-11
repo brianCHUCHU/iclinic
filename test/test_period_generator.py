@@ -11,7 +11,7 @@ from utils.id_check import id_generator
 from datetime import time, timedelta
 import string
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():

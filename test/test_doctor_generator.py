@@ -9,7 +9,7 @@ import random
 import pytest
 from utils.id_check import id_generator
 
-pytest.skip(allow_module_level=True)
+##pytest.skip(allow_module_level=True)
 
 @contextmanager
 def get_db_session():
