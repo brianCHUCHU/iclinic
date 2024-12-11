@@ -107,13 +107,13 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
         if command == "back":
             session['state'] = 'welcome'
             return {"message": "Back to main menu."}
-
         # 解析 command
         try:
             command = json.loads(command)
         except json.JSONDecodeError:
             return {"message": "Invalid JSON format. Please provide valid input."}
-
+        if command['date'] < datetime.datetime.now().strftime('%Y-%m-%d'):
+            return {"message": "Invalid date. Please enter a date in the future."}
         # 查询 Schedule
         schedule = db.query(Schedule).filter(Schedule.sid == command['sid']).first()
         if not schedule:
@@ -124,6 +124,10 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
         if not period:
             return {"message": "No such period found. Please check the schedule details."}
 
+        patient = db.query(Appointment).filter(Appointment.pid == session['user_id'], Appointment.date == command['date'], 
+        Appointment.sid == command['sid'], Appointment.status == 'P').first()
+        if patient:
+            return {"message": "You have a pending appointment on this date."}
         # 解析日期并匹配
         try:
             command['date'] = datetime.datetime.strptime(command['date'], '%Y-%m-%d')
@@ -155,7 +159,7 @@ async def execute_patient_command(request: Request, db: Session = Depends(get_db
             db.add(new_appointment)
             db.commit()
             db.refresh(new_appointment)
-            return {"message": "Appointment created successfully.", "appointment": new_appointment}
+            return {"message": "Appointment created successfully. Your Queue number is {}.".format(input_data['order']), "appointment": new_appointment}
         except SQLAlchemyError as e:
             db.rollback()
             return {"message": f"Database error: {str(e)}"}
