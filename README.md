@@ -10,7 +10,8 @@ pip install -r requirements.txt
 
 # Database
 
-Add `secrets/.env` file with the correct environment variables.
+1. Backup via .backup file on the repo
+2. Add `secrets/.env` file with the correct environment variables.
 
 Example:
 ```env
@@ -26,12 +27,4 @@ DB_PASSWORD="your_password"
 ```bash
 conda activate fastapi_postgres_env
 uvicorn main:app --reload
-```
-
-# pytest
-
-```bash
-conda activate fastapi_postgres_env
-set PYTHONPATH="your_root_repo_path"
-pytest
 ```
