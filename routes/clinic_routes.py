@@ -58,4 +58,5 @@ def authenticate_clinic_endpoint(auth: ClinicAuth, request: Request, db: Session
     session = request.session
     session['user_id'] = clinic.cid
     session['state'] = 'welcome'
+    session['queue_type'] = clinic.queue_type
     return {"message": "Clinic authenticated successfully", "clinic": clinic.cid}

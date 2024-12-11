@@ -5,6 +5,7 @@ asyncio==3.4.3
 backcall==0.2.0
 bcrypt==4.0.1
 certifi==2024.8.30
+charset-normalizer==3.4.0
 click==8.1.7
 colorama==0.4.6
 comm==0.1.4
@@ -61,6 +62,7 @@ python-multipart==0.0.19
 pywin32==306
 PyYAML==6.0.2
 pyzmq==25.1.0
+requests==2.32.3
 rich==13.9.4
 rich-toolkit==0.12.0
 shellingham==1.5.4
@@ -76,6 +78,7 @@ typeguard==4.4.1
 typer==0.15.1
 typing_extensions==4.12.2
 ujson==5.10.0
+urllib3==2.2.3
 uvicorn==0.32.1
 watchfiles==1.0.0
 wcwidth==0.2.6
