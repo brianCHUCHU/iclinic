@@ -1,6 +1,8 @@
 # Video, Slides and Reports
 
 - [Presentation Video](https://www.youtube.com/watch?v=LhqGdu6vF4I)
+- [Slides](https://github.com/brianCHUCHU/iclinic/blob/main/presentation_slides.pdf)
+- [Report](https://github.com/brianCHUCHU/iclinic/blob/main/DB_Final_Report_%E7%AC%AC27%E7%B5%84.pdf)
 
 # Virtual Environment
 
