@@ -7,6 +7,7 @@ import requests
 from models import Appointment, Schedule, Period
 import json
 import datetime
+from sqlalchemy.exc import SQLAlchemyError
 
 
 patient_console_router = APIRouter()
