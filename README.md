@@ -1,3 +1,7 @@
+# Video, Slides and Reports
+
+- [Presentation Video](https://www.youtube.com/watch?v=LhqGdu6vF4I)
+
 # Virtual Environment
 
 Please install the virtual environment via `requirements.txt` file.
